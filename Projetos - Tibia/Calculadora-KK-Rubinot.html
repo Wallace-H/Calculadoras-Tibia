@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Preço KK - Rubinot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --accent: #38bdf8;
+            --accent-hover: #0284c7;
+            --success: #10b981;
+            --error: #ef4444;
+            --border: rgba(148, 163, 184, 0.2);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #020617 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(56, 189, 248, 0.05);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 30px 0;
+        }
+
+        .result-section {
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--success);
+            margin-bottom: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .result-per-unit {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .detail-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+        }
+
+        .warning {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 12px;
+            color: #fca5a5;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .warning.show {
+            display: block;
+        }
+
+        .formula-info {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .formula-info code {
+            background: rgba(56, 189, 248, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent);
+            font-family: 'Courier New', monospace;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 24px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .result-value {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>💰 Calculadora KK</h1>
+                <p>Precifique seus KKs baseado no preço dos RCs</p>
+            </div>
+
+            <div class="form-group">
+                <label for="quantidadeKK">Quantidade de KKs a vender</label>
+                <input type="number" id="quantidadeKK" placeholder="Ex: 10" min="1" step="1">
+                <div class="input-hint">Quantos Kk's você vai vender</div>
+            </div>
+
+            <div class="form-group">
+                <label for="precoRC">Preço do RC em ouro (padrão: 78k)</label>
+                <input type="number" id="precoRC" placeholder="Ex: 78000" value="78000" min="1" step="1000">
+                <div class="input-hint">Quanto custa 1 RC em ouro dentro do jogo</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="result-section">
+                <div class="result-label">Preço por KK</div>
+                <div class="result-value" id="precoFinal">R$ 0,00</div>
+                <div class="result-per-unit">valor exato para cada KK</div>
+
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">RCs por KK</div>
+                        <div class="detail-value" id="rcsPerKK">0</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Renda Total</div>
+                        <div class="detail-value" id="totalRenda">R$ 0,00</div>
+                    </div>
+                </div>
+
+                <div class="warning" id="warning">
+                    ⚠️ Preencha todos os campos com valores válidos
+                </div>
+            </div>
+
+            <div class="formula-info">
+                <strong>Como funciona:</strong><br>
+                1000 RCs = R$ 87,00<br>
+                1 RC = R$ 0,087<br>
+                <code>Preço KK = (RCs por KK × 0,087) / Quantidade</code>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quantidadeKKInput = document.getElementById('quantidadeKK');
+        const precoRCInput = document.getElementById('precoRC');
+        const precoFinalDisplay = document.getElementById('precoFinal');
+        const rcsPerKKDisplay = document.getElementById('rcsPerKK');
+        const totalRendaDisplay = document.getElementById('totalRenda');
+        const warningDisplay = document.getElementById('warning');
+
+        // Valor fixo: 1000 RCs = 87 reais
+        const REAIS_POR_1000_RCS = 87;
+        const VALOR_RC_EM_REAIS = REAIS_POR_1000_RCS / 1000; // 0.087
+
+        function calcularPrecos() {
+            const quantidadeKK = parseInt(quantidadeKKInput.value) || 0;
+            const precoRC = parseInt(precoRCInput.value) || 0;
+
+            // Validação
+            if (quantidadeKK <= 0 || precoRC <= 0) {
+                warningDisplay.classList.add('show');
+                precoFinalDisplay.textContent = 'R$ 0,00';
+                rcsPerKKDisplay.textContent = '0';
+                totalRendaDisplay.textContent = 'R$ 0,00';
+                return;
+            }
+
+            warningDisplay.classList.remove('show');
+
+            // Fórmula correta:
+            // Preço por KK = 87 / preço_RC (em k)
+            // RCs por KK = 1000 / preço_RC (em k)
+            
+            const precoRCEmK = precoRC / 1000; // Converter para k (ex: 78000 → 78)
+            
+            const precoUmKK = 87 / precoRCEmK;
+            const rcsParaUmKK = 1000 / precoRCEmK;
+            
+            const rendaTotal = precoUmKK * quantidadeKK;
+
+            // Exibir resultados
+            precoFinalDisplay.textContent = `R$ ${precoUmKK.toFixed(2).replace('.', ',')}`;
+            rcsPerKKDisplay.textContent = `${rcsParaUmKK.toFixed(2).replace('.', ',')}`;
+            totalRendaDisplay.textContent = `R$ ${rendaTotal.toFixed(2).replace('.', ',')}`;
+        }
+
+        // Event listeners
+        quantidadeKKInput.addEventListener('input', calcularPrecos);
+        precoRCInput.addEventListener('input', calcularPrecos);
+
+        // Calcular ao carregar
+        calcularPrecos();
+    </script>
+</body>
+</html>

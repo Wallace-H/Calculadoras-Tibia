@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tibia Calculators - Hub Central</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-item span:first-child {
+            font-size: 1.8rem;
+        }
+
+        .stat-item span:last-child {
+            font-size: 1rem;
+            color: #94a3b8;
+        }
+
+        .calculators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .calculator-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .calculator-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(56, 189, 248, 0.6);
+            box-shadow: 0 12px 24px rgba(56, 189, 248, 0.2);
+            background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #38bdf8;
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+            flex-grow: 1;
+            margin-bottom: 20px;
+        }
+
+        .card-tag {
+            display: inline-block;
+            background-color: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            margin-right: 8px;
+        }
+
+        .access-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #38bdf8;
+            color: #0f172a;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .access-btn:hover {
+            background-color: #0284c7;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #94a3b8;
+            border-top: 1px solid rgba(56, 189, 248, 0.2);
+            margin-top: 50px;
+        }
+
+        .footer-link {
+            color: #38bdf8;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #0284c7;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .stats {
+                gap: 20px;
+            }
+
+            .calculators-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 30px 15px;
+                margin-bottom: 30px;
+            }
+        }
+
+        .highlight {
+            background-color: rgba(56, 189, 248, 0.1);
+            padding: 20px;
+            border-left: 4px solid #38bdf8;
+            border-radius: 6px;
+            margin-top: 30px;
+            text-align: center;
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚔️ Tibia Calculators</h1>
+            <p class="subtitle">Hub Central de Ferramentas para Tibia</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <span>📊</span>
+                    <span>4 Calculadoras</span>
+                </div>
+                <div class="stat-item">
+                    <span>⚡</span>
+                    <span>Rápidas e Precisas</span>
+                </div>
+                <div class="stat-item">
+                    <span>🎮</span>
+                    <span>Para Todos os Níveis</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="calculators-grid">
+                <!-- Calculadora de Dano de Magia -->
+                <a href="./Projetos - Tibia/Tibia-Spell-Damage-Calculator.html" class="calculator-card">
+                    <div class="card-icon">🔥</div>
+                    <div class="card-title">Spell Damage Calculator</div>
+                    <div class="card-description">
+                        Calcule o dano médio de seus spells. Ferramenta perfeita para planejar sua estratégia de combate.
+                    </div>
+                    <div>
+                        <span class="card-tag">Combate</span>
+                        <span class="card-tag">Dano</span>
+                    </div>
+                    <button class="access-btn">Acessar →</button>
+                </a>
+
+                <!-- Calculadora KK Rubinot -->
+                <a href="./Projetos - Tibia/Calculadora-KK-Rubinot.html" class="calculator-card">
+                    <div class="card-icon">💰</div>
+                    <div class="card-title">KK Calculator - Rubinot</div>
+                    <div class="card-description">
+                        Precifique seus KKs com base no preço dos RCs.
+                    </div>
+                    <div>
+                        <span class="card-tag">Rubinot</span>
+                        <span class="card-tag">Moeda</span>
+                    </div>
+                    <button class="access-btn">Acessar →</button>
+                </a>
+
+                <!-- Calculadora KK Tibia Global -->
+                <a href="./Projetos - Tibia/Calculadora-KK-Tibia-Global.html" class="calculator-card">
+                    <div class="card-icon">💵</div>
+                    <div class="card-title">KK Calculator - Tibia Global</div>
+                    <div class="card-description">
+                        Precifique seus KKs com base no preço dos TCs.
+                    </div>
+                    <div>
+                        <span class="card-tag">Global</span>
+                        <span class="card-tag">Moeda</span>
+                    </div>
+                    <button class="access-btn">Acessar →</button>
+                </a>
+
+                <!-- Calculadora de Forja -->
+                <a href="./Projetos - Tibia/Calculadora-de-Forja-Tibia.html" class="calculator-card">
+                    <div class="card-icon">⚙️</div>
+                    <div class="card-title">Calculadora de Forja</div>
+                    <div class="card-description">
+                        Sistema de Convergência e Fusão do Tibia. Calcule custos e recursos necessários para upgrades.
+                    </div>
+                    <div>
+                        <span class="card-tag">Forja</span>
+                        <span class="card-tag">Tier</span>
+                    </div>
+                    <button class="access-btn">Acessar →</button>
+                </a>
+            </div>
+
+            <div class="highlight">
+                <p>🎯 <strong>Dica:</strong> Todas as calculadoras funcionam offline. Seus dados não são armazenados em servidor.</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>
+                Desenvolvido com ❤️ pelo Sankah para a comunidade Tibiana
+            </p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                Tibia é marca registrada da CipSoft GmbH
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
