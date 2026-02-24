@@ -2,18 +2,20 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Calculadoras Tibia - Wallace</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadoras - Tibia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Coleção de calculadoras Tibia: dano de spell, KK Rubinot, KK Global e Forja." />
   <style>
     :root {
-      --bg: #050811;
-      --bg-alt: #0b1020;
-      --card: #11182b;
-      --accent: #1dd1a1;
-      --accent-soft: rgba(29, 209, 161, 0.1);
-      --text: #f5f5f5;
+      --bg: #050814;
+      --bg-elevated: #0b1020;
+      --card-bg: #10172a;
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.2);
+      --text: #e5e7eb;
       --muted: #9ca3af;
       --border: #1f2937;
+      --danger: #ef4444;
     }
 
     * {
@@ -29,239 +31,461 @@
       min-height: 100vh;
     }
 
-    header {
-      padding: 2rem 1.5rem 1rem;
-      max-width: 1024px;
+    .page {
+      max-width: 1100px;
       margin: 0 auto;
+      padding: 32px 16px 48px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
     }
 
     header h1 {
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
+      font-size: 2rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #f9fafb;
+      margin-bottom: 8px;
     }
 
     header p {
       color: var(--muted);
       font-size: 0.95rem;
-      max-width: 640px;
     }
 
-    main {
-      max-width: 1024px;
-      margin: 0 auto 2rem;
-      padding: 0 1.5rem 2rem;
+    .badge-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
     }
 
-    .calc-selector {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .calc-btn {
-      background: radial-gradient(circle at top left, var(--accent-soft), var(--card));
-      border: 1px solid var(--border);
-      border-radius: 0.75rem;
-      padding: 1rem 1rem;
-      text-align: left;
-      cursor: pointer;
-      color: var(--text);
-      position: relative;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-    }
-
-    .calc-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
-      border-color: var(--accent);
-    }
-
-    .calc-btn.active {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(29, 209, 161, 0.45);
-      background: linear-gradient(145deg, var(--accent-soft), var(--card));
-    }
-
-    .calc-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-
-    .calc-tag {
+    .badge {
+      border-radius: 999px;
+      padding: 4px 10px;
       font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
-    }
-
-    .calc-desc {
-      font-size: 0.85rem;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.75);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       color: var(--muted);
     }
 
-    .calc-emoji {
-      position: absolute;
-      right: 0.9rem;
-      top: 0.9rem;
-      font-size: 1.2rem;
-      opacity: 0.9;
+    .badge span {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
     }
 
-    .calc-container {
-      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.9));
-      border-radius: 0.75rem;
-      border: 1px solid var(--border);
-      padding: 0.75rem;
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
-    }
-
-    .calc-header {
+    .grid-title {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.4rem 0.75rem 0.6rem;
-      border-bottom: 1px solid rgba(55, 65, 81, 0.8);
-      margin-bottom: 0.5rem;
+      margin-bottom: 12px;
+      margin-top: 32px;
     }
 
-    .calc-header span {
-      font-size: 0.85rem;
+    .grid-title h2 {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
       color: var(--muted);
     }
 
-    .calc-header strong {
-      color: var(--accent);
+    .grid-title small {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .calculators-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+        footer {
+        text-align: center;
+        padding: 30px 20px;
+        color: #94a3b8;
+        border-top: 1px solid rgba(56, 189, 248, 0.2);
+        margin-top: 50px;
+        }
+
+        .footer-link {
+            color: #38bdf8;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #0284c7;
+        }
+
+    @media (max-width: 900px) {
+      .calculators-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .calculators-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .calculator-card {
+      position: relative;
+      border-radius: 14px;
+      padding: 14px 14px 12px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.14), #020617 60%);
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease, background 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .calculator-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.7);
+    }
+
+    .calculator-card.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-soft), 0 12px 40px rgba(22, 163, 74, 0.4);
+      background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.25), #020617 60%);
+    }
+
+    .calculator-icon {
+      font-size: 1.35rem;
+    }
+
+    .calculator-title {
+      font-size: 0.95rem;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    iframe {
+    .calculator-tag {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .calculator-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .calculator-foot {
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .pill-danger {
+      border-color: rgba(248, 113, 113, 0.6);
+      color: #fecaca;
+    }
+
+    .pill-danger .pill-dot {
+      background: var(--danger);
+    }
+
+    .viewer {
+      margin-top: 32px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), #020617 70%);
+      padding: 16px 12px 12px;
+    }
+
+    .viewer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .viewer-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+
+    .viewer-status {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .viewer-status span {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      margin-right: 6px;
+    }
+
+    .viewer-placeholder {
+      padding: 26px 16px 30px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .viewer-placeholder strong {
+      color: var(--text);
+    }
+
+    .grid-title small a {
+    color: #a855f7;           /* roxo vivo */
+    font-weight: 600;
+    text-decoration: none;
+    }
+
+    .grid-title small a:hover {
+    color: #c4b5fd;           /* roxo mais claro no hover */
+    text-decoration: underline;
+    }
+
+    .viewer-iframe {
+      display: none;
       width: 100%;
-      height: 70vh;
       border: none;
-      border-radius: 0.5rem;
+      border-radius: 12px;
       background: #020617;
+      min-height: 900px; /* ajuste se precisar de mais altura */
     }
 
-    @media (max-width: 640px) {
-      header {
-        padding-top: 1.5rem;
-      }
-
-      header h1 {
-        font-size: 1.4rem;
-      }
-
-      iframe {
-        height: 75vh;
+    @media (max-width: 768px) {
+      .viewer-iframe {
+        min-height: 1100px;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Calculadoras Tibia</h1>
-    <p>Selecione uma das calculadoras abaixo. .</p>
-  </header>
-
-  <main>
-    <section class="calc-selector">
-      <button
-        class="calc-btn"
-        data-src="Projetos - Tibia/Tibia-Spell-Damage-Calculator.html"
-      >
-        <div class="calc-emoji">✨</div>
-        <div class="calc-tag">Spells</div>
-        <div class="calc-title">Spell Damage Calculator</div>
-        <div class="calc-desc">
-          Calcule o dano das suas spells com base em ML, nível e bônus.
+  <div class="page">
+    <header>
+      <h1>Calculadoras Tibia</h1>
+      <p>Coleção de calculadoras criadas para facilitar sua vida no Tibia.</p>
+      <div class="badge-row">
+        <div class="badge">
+          <span></span> Rubinot &amp; Global
         </div>
-      </button>
-
-      <button
-        class="calc-btn"
-        data-src="Projetos - Tibia/Calculadora-KK-Rubinot.html"
-      >
-        <div class="calc-emoji">💎</div>
-        <div class="calc-tag">Rubinot</div>
-        <div class="calc-title">Calculadora KK Rubinot</div>
-        <div class="calc-desc">
-          Converta RC em R$ e descubra o valor ideal por KK no Rubinot.
+        <div class="badge">
+          <span></span> Calculadoras em tempo real
         </div>
-      </button>
+      </div>
+    </header>
 
-      <button
-        class="calc-btn"
-        data-src="Projetos - Tibia/Calculadora-KK-Tibia-Global.html"
-      >
-        <div class="calc-emoji">🌍</div>
-        <div class="calc-tag">Global</div>
-        <div class="calc-title">Calculadora KK Tibia Global</div>
-        <div class="calc-desc">
-          Precifique seus KKs usando o preço dos TCs no Tibia Global.
-        </div>
-      </button>
+    <section aria-label="Lista de calculadoras">
+      <div class="grid-title">
+        <h2>Calculadoras</h2>
+        <small>
+        Me segue na Twitch →
+        <a href="https://www.twitch.tv/sankah__"
+            target="_blank"
+            rel="noopener noreferrer">
+            <img src="https://assets.twitch.tv/assets/favicon-16-52e571ffea063af7a7f4.png"
+                alt="Twitch"
+                style="height: 16px; vertical-align: middle; margin: 0 4px;" />
+            Sankah
+        </a>
+        </small>
+      </div>
 
-      <button
-        class="calc-btn"
-        data-src="Projetos - Tibia/Calculadora-de-Forja-Tibia.html"
-      >
-        <div class="calc-emoji">⚔️</div>
-        <div class="calc-tag">Forja</div>
-        <div class="calc-title">Calculadora de Forja</div>
-        <div class="calc-desc">
-          Simule custos de convergência e fusão no sistema de forja do Tibia.
-        </div>
-      </button>
-    </section>
+      <div class="calculators-grid">
+        <button class="calculator-card" data-target="spell" type="button">
+          <div class="calculator-icon">✨</div>
+          <div class="calculator-title">
+            Spell Damage
+            <span class="calculator-tag">PvE / PvP</span>
+          </div>
+          <div class="calculator-desc">
+            Calcule o dano das suas spells com base em level, ML e bônus (Roda + Proficiência).
+          </div>
+          <div class="calculator-foot">
+            <span class="pill">
+              <span class="pill-dot"></span>
+              Dano preciso
+            </span>
+          </div>
+        </button>
 
-    <section id="calc-section">
-      <div class="calc-container">
-        <div class="calc-header">
-          <span>Calculadora atual:</span>
-          <strong id="calc-name">Selecione uma calculadora acima</strong>
-        </div>
-        <iframe id="calc-frame" loading="lazy"></iframe>
+        <button class="calculator-card" data-target="kk-rubinot" type="button">
+          <div class="calculator-icon">💰</div>
+          <div class="calculator-title">
+            KK Rubinot
+            <span class="calculator-tag">RC &gt; R$</span>
+          </div>
+          <div class="calculator-desc">
+            Calcule o valor dos seus KKs no Rubinot usando o preço dos RCs.
+          </div>
+          <div class="calculator-foot">
+            <span class="pill">
+              <span class="pill-dot"></span>
+              Rubinot
+            </span>
+          </div>
+        </button>
+
+        <button class="calculator-card" data-target="kk-global" type="button">
+          <div class="calculator-icon">🌍</div>
+          <div class="calculator-title">
+            KK Tibia Global
+            <span class="calculator-tag">TC &gt; R$</span>
+          </div>
+          <div class="calculator-desc">
+            Calcule o valor dos seus KKs no global usando o preço dos TCs.
+          </div>
+          <div class="calculator-foot">
+            <span class="pill">
+              <span class="pill-dot"></span>
+              Global
+            </span>
+          </div>
+        </button>
+
+        <button class="calculator-card" data-target="forja" type="button">
+          <div class="calculator-icon">⚔️</div>
+          <div class="calculator-title">
+            Forja Tibia
+            <span class="calculator-tag">Convergência</span>
+          </div>
+          <div class="calculator-desc">
+            Simule custos de convergência e fusão para alcançar o tier desejado.
+          </div>
+          <div class="calculator-foot">
+            <span class="pill pill-danger">
+              <span class="pill-dot"></span>
+              Custo total
+            </span>
+          </div>
+        </button>
       </div>
     </section>
-  </main>
+
+    <section class="viewer" aria-label="Visualização da calculadora selecionada">
+      <div class="viewer-header">
+        <div class="viewer-title">Calculadora selecionada</div>
+
+      </div>
+
+      <div id="calculator-placeholder" class="viewer-placeholder">
+        <strong>Selecione uma calculadora acima</strong><br />
+        A calculadora escolhida será carregada aqui, mantendo as opções no topo para você alternar facilmente.
+      </div>
+
+      <iframe
+        id="calculator-frame"
+        class="viewer-iframe"
+        title="Calculadora Tibia selecionada"
+        loading="lazy"
+      ></iframe>
+    </section>
+  </div>
 
   <script>
-    const buttons = document.querySelectorAll(".calc-btn");
-    const frame = document.getElementById("calc-frame");
-    const calcName = document.getElementById("calc-name");
-    const section = document.getElementById("calc-section");
+    // Mapeamento das calculadoras para os arquivos dentro da pasta "Projetos - Tibia"
+    const CALCULATOR_MAP = {
+      "spell": "Projetos - Tibia/Tibia-Spell-Damage-Calculator.html",
+      "kk-rubinot": "Projetos - Tibia/Calculadora-KK-Rubinot.html",
+      "kk-global": "Projetos - Tibia/Calculadora-KK-Tibia-Global.html",
+      "forja": "Projetos - Tibia/Calculadora-de-Forja-Tibia.html"
+    };
 
-    function setActive(button) {
-      buttons.forEach((b) => b.classList.remove("active"));
-      button.classList.add("active");
-    }
+    const buttons = document.querySelectorAll(".calculator-card");
+    const iframe = document.getElementById("calculator-frame");
+    const placeholder = document.getElementById("calculator-placeholder");
 
-    function loadCalculator(button) {
-      const src = button.getAttribute("data-src");
-      const title = button.querySelector(".calc-title").textContent.trim();
-
-      frame.src = src;
-      calcName.textContent = title;
-      setActive(button);
-
-      section.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
+    function setActiveButton(targetKey) {
+      buttons.forEach(btn => {
+        if (btn.dataset.target === targetKey) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
       });
     }
 
-    // Clique para trocar de calculadora
-    buttons.forEach((button) => {
-      button.addEventListener("click", () => loadCalculator(button));
+    function loadCalculator(targetKey) {
+      const src = CALCULATOR_MAP[targetKey];
+      if (!src) return;
+
+      // Troca o conteúdo do iframe
+      iframe.src = src;
+      iframe.style.display = "block";
+
+      // Esconde a mensagem inicial
+      if (placeholder) {
+        placeholder.style.display = "none";
+      }
+
+      // Marca o card ativo
+      setActiveButton(targetKey);
+
+      // Rola suavemente até o início do viewer (opcional)
+      iframe.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        const key = button.dataset.target;
+        loadCalculator(key);
+      });
     });
 
-    // Opcional: carregar a primeira calculadora por padrão
-    if (buttons.length > 0) {
-      loadCalculator(buttons[0]);
-    }
+
+
+    // Se você quiser já carregar uma calculadora por padrão ao abrir a página,
+    // descomente a linha abaixo (por exemplo, Spell Damage):
+    // loadCalculator("spell");
   </script>
+  <footer>
+            <p>
+                Desenvolvido por Sankah para a comunidade Tibiana
+            </p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                Tibia é marca registrada da CipSoft GmbH
+            </p>
+        </footer>
 </body>
 </html>
