@@ -229,9 +229,9 @@
             </div>
 
             <div class="form-group">
-                <label for="precoRC">Preço do RC em ouro (padrão: 78k)</label>
+                <label for="precoRC">Preço do RC em Gold (padrão: 78k)</label>
                 <input type="number" id="precoRC" placeholder="Ex: 78000" value="78000" min="1" step="1000">
-                <div class="input-hint">Quanto custa 1 RC em ouro dentro do jogo</div>
+                <div class="input-hint">Quanto custa 1 RC em Gold dentro do jogo</div>
             </div>
 
             <div class="divider"></div>
@@ -293,21 +293,22 @@
 
             warningDisplay.classList.remove('show');
 
-            // Fórmula correta:
-            // Preço por KK = 87 / preço_RC (em k)
-            // RCs por KK = 1000 / preço_RC (em k)
-            
-            const precoRCEmK = precoRC / 1000; // Converter para k (ex: 78000 → 78)
-            
+            // Fórmulas
+            const precoRCEmK = precoRC / 1000; // 78000 → 78
             const precoUmKK = 87 / precoRCEmK;
             const rcsParaUmKK = 1000 / precoRCEmK;
-            
             const rendaTotal = precoUmKK * quantidadeKK;
 
             // Exibir resultados
             precoFinalDisplay.textContent = `R$ ${precoUmKK.toFixed(2).replace('.', ',')}`;
             rcsPerKKDisplay.textContent = `${rcsParaUmKK.toFixed(2).replace('.', ',')}`;
-            totalRendaDisplay.textContent = `R$ ${rendaTotal.toFixed(2).replace('.', ',')}`;
+
+            const rendaTotalFormatada = rendaTotal.toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            totalRendaDisplay.textContent = `R$ ${rendaTotalFormatada}`;
         }
 
         // Event listeners
