@@ -229,9 +229,9 @@
             </div>
 
             <div class="form-group">
-                <label for="precoTC">Preço do TC em ouro (padrão: 38k)</label>
+                <label for="precoTC">Preço do TC em Gold (padrão: 38k)</label>
                 <input type="number" id="precoTC" placeholder="Ex: 38000" value="38000" min="1" step="1000">
-                <div class="input-hint">Quanto custa 1 TC em ouro dentro do jogo</div>
+                <div class="input-hint">Quanto custa 1 TC em Gold dentro do jogo</div>
             </div>
 
             <div class="divider"></div>
@@ -279,7 +279,7 @@
 
         function calcularPrecos() {
             const quantidadeKK = parseInt(quantidadeKKInput.value) || 0;
-            const precoTCEmK = parseInt(precoTCInput.value) / 1000 || 0;
+            const precoTCEmK = (parseInt(precoTCInput.value) || 0) / 1000;
 
             // Validação
             if (quantidadeKK <= 0 || precoTCEmK <= 0) {
@@ -292,19 +292,21 @@
 
             warningDisplay.classList.remove('show');
 
-            // Fórmula correta:
-            // Preço por KK = 212 / preço_TC_em_k
-            // TCs por KK = 1000 / preço_TC_em_k
-
+            // Fórmulas
             const precoUmKK = REAIS_POR_1000_TCS / precoTCEmK;
             const tcsParaUmKK = 1000 / precoTCEmK;
-            
             const rendaTotal = precoUmKK * quantidadeKK;
 
             // Exibir resultados
             precoFinalDisplay.textContent = `R$ ${precoUmKK.toFixed(2).replace('.', ',')}`;
             tcsPerKKDisplay.textContent = `${tcsParaUmKK.toFixed(2).replace('.', ',')}`;
-            totalRendaDisplay.textContent = `R$ ${rendaTotal.toFixed(2).replace('.', ',')}`;
+
+            const rendaTotalFormatada = rendaTotal.toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            totalRendaDisplay.textContent = `R$ ${rendaTotalFormatada}`;
         }
 
         // Event listeners
