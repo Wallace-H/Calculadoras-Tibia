@@ -1,373 +1,358 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Dano - Tibia Spells</title>
-    <style>
-    :root {
-        --color-primary: #38bdf8;
-        --color-primary-hover: #0ea5e9;
-        --color-bg: #0f172a;
-        --color-surface: #1e293b;
-        --color-text: #f1f5f9;
-        --color-text-secondary: #cbd5e1;
-        --color-success: #22c55e;
-        --color-accent: #f59e0b;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tibia Spell Damage Calculator</title>
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+<style>
+:root {
+    --color-bg-base: #0f172a;
+    --color-bg-surface: #1e293b;
+    --color-text-primary: #f1f5f9;
+    --color-text-secondary: #cbd5e1;
+    --color-primary: #38bdf8;
+    --color-primary-hover: #0284c7;
+    --color-accent: #06b6d4;
+}
 
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #0f172a 0%, #0c0e1a 100%);
-        color: var(--color-text);
-        min-height: 100vh;
-        padding: 20px;
-    }
+* { margin:0; padding:0; box-sizing:border-box; }
 
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
+body {
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:linear-gradient(135deg,#0f172a 0%,#1a1f35 100%);
+    color:var(--color-text-primary);
+    padding:20px;
+    min-height:100vh;
+}
 
-    .header {
-        text-align: center;
-        margin-bottom: 40px;
-    }
+.container { max-width:900px; margin:0 auto; }
 
-    .header h1 {
-        font-size: 2rem;
-        color: var(--color-primary);
-        margin-bottom: 10px;
-    }
+.header { text-align:center; margin-bottom:40px; }
 
-    .header p {
-        color: var(--color-text-secondary);
-        font-size: 0.95rem;
-    }
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #38bdf8, #06b6d4);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
 
-    .content-wrapper {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 24px;
-    }
+.header p {
+    color:var(--color-text-secondary);
+    font-size:1.1rem;
+}
 
-    .input-section,
-    .results-section {
-        background: var(--color-surface);
-        border-radius: 12px;
-        padding: 30px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+.content {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+    margin-bottom:30px;
+}
 
-    .input-section h2,
-    .results-section h2 {
-        color: var(--color-primary);
-        margin-bottom: 20px;
-        font-size: 1.3rem;
-    }
+.card {
+    background:var(--color-bg-surface);
+    border:1px solid rgba(56,189,248,0.2);
+    border-radius:12px;
+    padding:24px;
+}
 
-    .form-group {
-        margin-bottom: 20px;
-    }
+.card-title {
+    font-size:1.3rem;
+    margin-bottom:20px;
+    color:var(--color-primary);
+    font-weight:600;
+}
 
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        color: var(--color-text);
-        font-weight: 500;
-        font-size: 0.95rem;
-    }
+.form-group { margin-bottom:20px; }
 
-    .form-group input {
-        width: 100%;
-        padding: 12px 14px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--color-text);
-        font-size: 1rem;
-        transition: all 0.3s ease;
-    }
+label {
+    display:block;
+    margin-bottom:8px;
+    font-weight:500;
+    color:var(--color-text-secondary);
+}
 
-    .form-group input:focus {
-        outline: none;
-        border-color: var(--color-primary);
-        background: rgba(56, 189, 248, 0.05);
-        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
-    }
+select,input {
+    width:100%;
+    padding:12px;
+    background:#0f172a;
+    border:2px solid rgba(56,189,248,0.3);
+    border-radius:8px;
+    color:var(--color-text-primary);
+    font-size:1rem;
+}
 
-    .form-group input::placeholder {
-        color: rgba(203, 213, 225, 0.5);
-    }
+select:focus,input:focus {
+    outline:none;
+    border-color:var(--color-primary);
+}
 
-    .input-hint {
-        font-size: 0.85rem;
-        color: var(--color-text-secondary);
-        margin-top: 6px;
-    }
+.btn {
+    width:100%;
+    padding:14px;
+    background:linear-gradient(135deg,#38bdf8,#06b6d4);
+    border:none;
+    border-radius:8px;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+}
 
-    .calculate-btn {
-        width: 100%;
-        padding: 14px;
-        background: var(--color-primary);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin-top: 10px;
-    }
+.results {
+    background:var(--color-bg-surface);
+    border:2px solid rgba(6,182,212,0.3);
+    border-radius:12px;
+    padding:24px;
+    margin-top:20px;
+}
 
-    .calculate-btn:hover {
-        background: var(--color-primary-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
-    }
+.result-item {
+    display:flex;
+    gap:15px;
+    margin-bottom:15px;
+    padding-bottom:15px;
+    border-bottom:1px solid rgba(56,189,248,0.1);
+}
 
-    .spells-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 16px;
-    }
+.result-item:last-child {
+    border-bottom:none;
+    margin-bottom:0;
+    padding-bottom:0;
+}
 
-    .spell-card {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 10px;
-        padding: 18px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        transition: all 0.3s ease;
-    }
+.result-spell-icon {
+    width:50px;
+    height:50px;
+    border-radius:8px;
+    background:rgba(56,189,248,0.1);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
 
-    .spell-card:hover {
-        transform: translateY(-4px);
-        border-color: var(--color-primary);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    }
+.result-spell-icon img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
 
-    .spell-header {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 12px;
-    }
+.result-content { flex:1; }
 
-    .spell-icon {
-        width: 50px;
-        height: 50px;
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px;
-    }
+.result-spell-name {
+    font-weight:600;
+    color:var(--color-primary);
+    margin-bottom:4px;
+}
 
-    .spell-name {
-        font-weight: 600;
-        color: var(--color-text);
-        font-size: 1rem;
-        flex: 1;
-    }
+.result-damage {
+    font-size:1.1rem;
+    font-weight:700;
+}
 
-    .spell-base {
-        font-size: 0.85rem;
-        color: var(--color-text-secondary);
-        margin-bottom: 8px;
-    }
+.damage-breakdown {
+    font-size:0.85rem;
+    color:var(--color-accent);
+    margin-top:6px;
+}
 
-    .spell-damage {
-        background: rgba(0, 0, 0, 0.3);
-        padding: 12px;
-        border-radius: 6px;
-        margin-top: 10px;
-    }
+.stage-info {
+    font-size:0.8rem;
+    color:var(--color-accent);
+}
 
-    .damage-label {
-        font-size: 0.8rem;
-        color: var(--color-text-secondary);
-        margin-bottom: 4px;
-    }
-
-    .damage-value {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--color-success);
-    }
-
-    .damage-breakdown {
-        font-size: 0.75rem;
-        color: var(--color-accent);
-        margin-top: 6px;
-        padding-top: 6px;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .no-results {
-        text-align: center;
-        color: var(--color-text-secondary);
-        padding: 40px 20px;
-        font-size: 1rem;
-    }
-
-    .info-box {
-        background: rgba(56, 189, 248, 0.1);
-        border: 1px solid rgba(56, 189, 248, 0.3);
-        border-radius: 8px;
-        padding: 12px;
-        margin-top: 20px;
-        font-size: 0.85rem;
-        color: var(--color-text-secondary);
-        line-height: 1.6;
-    }
-
-    .info-box strong {
-        color: var(--color-primary);
-    }
-
-    @media (max-width: 900px) {
-        .content-wrapper {
-            grid-template-columns: 1fr;
-        }
-    }
+@media (max-width:768px){
+    .content{grid-template-columns:1fr;}
+}
 </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>⚔️ Calculadora de Dano - Tibia Spells</h1>
-            <p>Calcule o dano de suas spells favoritas!</p>
-        </div>
 
-        <div class="content-wrapper">
-            <div class="input-section">
-                <h2>⚙️ Configurações</h2>
-                
-                <div class="form-group">
-                    <label for="ml">Magic Level (ML)</label>
-                    <input 
-                        type="number" 
-                        id="ml" 
-                        placeholder="Ex: 80" 
-                        min="0" 
-                        max="300"
-                        value="0"
-                    >
-                    <div class="input-hint">Seu nível mágico</div>
-                </div>
+<div class="container">
+<div class="header">
+<h1>⚔️ Tibia Spell Damage Calculator</h1>
+<p>Calcule o dano das suas spells favoritas</p>
+</div>
 
-                <div class="form-group">
-                    <label for="levelDmg">Level DMG Bonus</label>
-                    <input 
-                        type="number" 
-                        id="levelDmg" 
-                        placeholder="Ex: 50" 
-                        min="0"
-                        value="0"
-                    >
-                    <div class="input-hint">Bônus de dano por level</div>
-                </div>
+<div class="content">
 
-                <div class="form-group">
-                    <label for="boost">Bônus de Aumento (%)</label>
-                    <input 
-                        type="number" 
-                        id="boost" 
-                        placeholder="Ex: 15" 
-                        min="0"
-                        max="500"
-                        value="0"
-                        step="0.5"
-                    >
-                    <div class="input-hint">Proficiência, roda de habilidade, gemas, etc</div>
-                </div>
+<div class="card">
+<div class="card-title">Configurações</div>
 
-                <button class="calculate-btn" onclick="calcularDano()">
-                    📊 Calcular Dano
-                </button>
+<div class="form-group">
+<label for="vocation">Selecione a Vocação:</label>
+<select id="vocation" onchange="updateSpells()">
+<option value="">-- Escolha uma vocação --</option>
+<option value="sorcerer">Master Sorcerer</option>
+<option value="druid">Elder Druid</option>
+<option value="paladin">Royal Paladin</option>
+</select>
+</div>
 
-            </div>
+<div class="form-group">
+<label for="spell">Selecione a Spell:</label>
+<select id="spell" onchange="updateSpellPreview()">
+<option value="">-- Selecione uma vocação primeiro --</option>
+</select>
+</div>
 
-            <div class="results-section">
-                <h2>📈 Resultados</h2>
-                <div id="results" class="spells-grid">
-                    <div class="no-results">
-                        Insira os valores e clique em "Calcular Dano" para ver os resultados
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div id="spellPreview" style="display:none;">
+<div class="spell-icon placeholder" id="spellIconPreview">📜</div>
+</div>
 
-    <script>
-        const spells = [
-            { name: 'Great Fire Wave', basePower: 100, emoji: '🔥' },
-            { name: 'Energy Wave', basePower: 150, emoji: '⚡' },
-            { name: 'Great Energy Beam', basePower: 170, emoji: '✨' },
-            { name: 'Rage of the Skies', basePower: 200, emoji: '⛈️' },
-            { name: "Hell's Core", basePower: 250, emoji: '🔮' },
-            { name: 'Divine Caldera', basePower: 140, emoji: '☀️' },
-            { name: 'Divine Grenade', basePower: 190, emoji: '💥' }
-        ];
+<div class="form-group">
+<label for="magic">Magic Level:</label>
+<input type="number" id="magic" value="0" min="0">
+</div>
 
-        function calcularDano() {
-            const ml = parseFloat(document.getElementById('ml').value) || 0;
-            const levelDmg = parseFloat(document.getElementById('levelDmg').value) || 0;
-            const boost = parseFloat(document.getElementById('boost').value) || 0;
+<div class="form-group">
+<label for="levelDmg">Level DMG Bonus:</label>
+<input type="number" id="levelDmg" value="0" min="0">
+</div>
 
-            if (ml < 0 || levelDmg < 0 || boost < 0) {
-                alert('Por favor, insira valores válidos (não negativos)');
-                return;
-            }
+<div class="form-group">
+<label for="boost">Bônus % (Roda, Proficiência, etc):</label>
+<input type="number" id="boost" value="0" min="0" step="0.5">
+</div>
 
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '';
+<button class="btn" onclick="calculateDamage()">Calcular Dano</button>
+</div>
 
-            spells.forEach(spell => {
-                // Fórmula: (ML*Base Power/25 + Base Power/4) + levelDMG
-                // Com bônus em porcentagem aplicado ao Base Power
-                const basePowerComBonus = spell.basePower * (1 + boost / 100);
-                const dano = (ml * basePowerComBonus / 25 + basePowerComBonus / 4) + levelDmg;
+<div class="card">
+<div class="card-title">Resultados</div>
+<div id="results" class="results">
+Selecione uma spell e clique em calcular.
+</div>
+</div>
 
-                // Para referência, também mostramos o cálculo sem bônus
-                const danoSemBonus = (ml * spell.basePower / 25 + spell.basePower / 4) + levelDmg;
-                const diferencaBônus = dano - danoSemBonus;
+</div>
+</div>
 
-                const card = document.createElement('div');
-                card.className = 'spell-card';
-                card.innerHTML = `
-                    <div class="spell-header">
-                        <div class="spell-icon">${spell.emoji}</div>
-                        <div class="spell-name">${spell.name}</div>
-                    </div>
-                    <div class="spell-base">Base Power: ${spell.basePower}</div>
-                    <div class="spell-damage">
-                        <div class="damage-label">Dano Médio</div>
-                        <div class="damage-value">${Math.floor(dano)}</div>
-                        ${boost > 0 ? `<div class="damage-breakdown">Aumentou ${Math.floor(diferencaBônus)} com ${boost}% de bônus</div>` : ''}
-                    </div>
-                `;
-                resultsDiv.appendChild(card);
-            });
-        }
+<script>
 
-        // Calcular ao carregar a página
-        window.addEventListener('load', () => {
-            calcularDano();
-        });
+const spellsByVocation = {
+            sorcerer: [
+                { name: 'Great Fire Wave', basePower: 100, imageUrl: 'https://www.tibiawiki.com.br/images/1/1d/Great_Fire_Wave.gif' },
+                { name: 'Energy Wave', basePower: 150, imageUrl: 'https://www.tibiawiki.com.br/images/7/7d/Energy_Wave.gif' },
+                { name: 'Great Energy Beam', basePower: 170, imageUrl: 'https://www.tibiawiki.com.br/images/6/67/Great_Energy_Beam.gif' },
+                { name: 'Rage of the Skies', basePower: 200, imageUrl: 'https://www.tibiawiki.com.br/images/9/9e/Rage_of_the_Skies.gif' },
+                { name: "Hell's Core", basePower: 250, imageUrl: 'https://www.tibiawiki.com.br/images/0/0e/Hell%27s_Core.gif' }
+            ],
+            paladin: [
+                { name: 'Divine Caldera', basePower: 140, imageUrl: 'https://www.tibiawiki.com.br/images/f/fa/Divine_Caldera.gif' },
+                { name: 'Divine Grenade', basePower: 190, imageUrl: 'https://www.tibiawiki.com.br/images/b/be/Divine_Grenade.gif' }
+            ],
+            druid: [
+                { name: 'Terra Wave', basePower: 120, imageUrl: 'https://www.tibiawiki.com.br/images/e/eb/Terra_Wave.gif' },
+                { name: 'Strong Ice Wave', basePower: 150, imageUrl: 'https://www.tibiawiki.com.br/images/a/ae/Strong_Ice_Wave.gif' },
+                { name: 'Wrath of Nature', basePower: 150, imageUrl: 'https://www.tibiawiki.com.br/images/a/ab/Wrath_of_Nature.gif' },
+                { name: 'Eternal Winter', basePower: 200, imageUrl: 'https://www.tibiawiki.com.br/images/6/6e/Eternal_Winter.gif' },
+                { name: 'Twin Bursts', basePower: 115, imageUrl: 'https://www.tibiawiki.com.br/images/0/0d/Twin_Bursts.gif', stages: [20, 40, 60] }
+            ],
+            monk: [],
+            knight: []
+        };
 
-        // Calcular quando mudar os valores
-        document.getElementById('ml').addEventListener('change', calcularDano);
-        document.getElementById('levelDmg').addEventListener('change', calcularDano);
-        document.getElementById('boost').addEventListener('change', calcularDano);
-    </script>
+function updateSpells(){
+const vocation=document.getElementById('vocation').value;
+const spellSelect=document.getElementById('spell');
+spellSelect.innerHTML='<option value="">-- Selecione uma spell --</option>';
+if(!vocation)return;
+
+spellsByVocation[vocation].forEach((spell,index)=>{
+const opt=document.createElement('option');
+opt.value=index;
+opt.textContent=spell.name;
+spellSelect.appendChild(opt);
+});
+}
+
+function updateSpellPreview(){
+const vocation=document.getElementById('vocation').value;
+const spellIndex=document.getElementById('spell').value;
+const preview=document.getElementById('spellPreview');
+const icon=document.getElementById('spellIconPreview');
+
+if(vocation && spellIndex!==""){
+preview.style.display="block";
+const spell=spellsByVocation[vocation][spellIndex];
+icon.innerHTML=spell.imageUrl.trim()
+? `<img src="${spell.imageUrl}" alt="${spell.name}">`
+: '📜';
+}else{
+preview.style.display="none";
+}
+}
+
+function calculateDamage(){
+
+const vocation=document.getElementById('vocation').value;
+const spellIndex=document.getElementById('spell').value;
+const ml=parseFloat(document.getElementById('magic').value)||0;
+const levelDmg=parseFloat(document.getElementById('levelDmg').value)||0;
+const boost=parseFloat(document.getElementById('boost').value)||0;
+
+if(!vocation||spellIndex===""){
+alert("Selecione vocação e spell.");
+return;
+}
+
+const spell=spellsByVocation[vocation][spellIndex];
+const results=document.getElementById('results');
+
+const basePowerComBonus=spell.basePower*(1+boost/100);
+
+function formula(bp){
+return (ml*bp/25 + bp/4) + levelDmg;
+}
+
+let html=`<div class="result-item">
+<div class="result-spell-icon">
+${spell.imageUrl.trim()?`<img src="${spell.imageUrl}">`:'📜'}
+</div>
+<div class="result-content">
+<div class="result-spell-name">${spell.name}</div>`;
+
+if (spell.stages) {
+
+    // Valor base igual a qualquer outra spell (já com bônus % aplicado)
+    const baseNormalBonus = Math.floor(formula(basePowerComBonus));
+    const baseNormalSemBonus = Math.floor(formula(spell.basePower));
+
+    html += `<div>Base: <strong>${baseNormalBonus}</strong></div>`;
+
+    spell.stages.forEach((stage) => {
+
+        // Aplica % de estágio SOBRE o valor final já calculado
+        const stageBonusValue = Math.floor(baseNormalBonus * (1 + stage / 100));
+        const stageNormalValue = Math.floor(baseNormalSemBonus * (1 + stage / 100));
+
+        const diferencaStage = stageBonusValue - stageNormalValue;
+
+        html += `
+            <div>Base +${stage}%: <strong>${stageBonusValue}</strong></div>
+            ${boost > 0 ? `<div class="damage-breakdown">Aumentou ${diferencaStage} com ${boost}% de bônus</div>` : ''}
+        `;
+    });
+
+    html += `<div class="stage-info">Estágios independentes (não acumulativos)</div>`;
+}else{
+
+const danoBonus=Math.floor(formula(basePowerComBonus));
+const danoNormal=Math.floor(formula(spell.basePower));
+const diferenca=danoBonus-danoNormal;
+
+html+=`<div class="result-damage">${danoBonus} de dano</div>
+${boost>0?`<div class="damage-breakdown">Aumentou ${Math.floor(diferenca)} com ${boost}% de bônus</div>`:''}`;
+}
+
+html+=`</div></div>`;
+results.innerHTML=html;
+}
+
+</script>
 </body>
 </html>
