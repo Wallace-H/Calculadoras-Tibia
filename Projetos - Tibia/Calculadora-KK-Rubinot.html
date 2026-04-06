@@ -224,13 +224,13 @@
 
             <div class="form-group">
                 <label for="quantidadeKK">Quantidade de KKs a vender</label>
-                <input type="number" id="quantidadeKK" placeholder="Ex: 10" min="1" step="1">
+                <input type="number" id="quantidadeKK" placeholder="Ex: 10.5" min="0.01" step="any">
                 <div class="input-hint">Quantos Kk's você vai vender</div>
             </div>
 
             <div class="form-group">
-                <label for="precoRC">Preço do RC em Gold (padrão: 78k)</label>
-                <input type="number" id="precoRC" placeholder="Ex: 78000" value="78000" min="1" step="1000">
+                <label for="precoRC">Preço do RC em Gold (padrão: 60k)</label>
+                <input type="number" id="precoRC" placeholder="Ex: 60000" value="60000" min="0.01" step="any">
                 <div class="input-hint">Quanto custa 1 RC em Gold dentro do jogo</div>
             </div>
 
@@ -260,8 +260,8 @@
             <div class="formula-info">
                 <strong>Como funciona:</strong><br>
                 1000 RCs = R$ 87,00<br>
-                1 RC = R$ 0,087<br>
-                <code>Preço KK = (RCs por KK × 0,087) / Quantidade</code>
+                1 KK = 1000 ÷ preço RC (em k)<br>
+                <code>Preço KK = 87 ÷ preço RC (em k)</code>
             </div>
         </div>
     </div>
@@ -278,9 +278,14 @@
         const REAIS_POR_1000_RCS = 87;
         const VALOR_RC_EM_REAIS = REAIS_POR_1000_RCS / 1000; // 0.087
 
+        function parseValor(val) {
+            // Troca vírgula por ponto para aceitar ambos como separador decimal
+            return parseFloat(val.replace(',', '.')) || 0;
+        }
+
         function calcularPrecos() {
-            const quantidadeKK = parseInt(quantidadeKKInput.value) || 0;
-            const precoRC = parseInt(precoRCInput.value) || 0;
+            const quantidadeKK = parseValor(quantidadeKKInput.value);
+            const precoRC = parseValor(precoRCInput.value);
 
             // Validação
             if (quantidadeKK <= 0 || precoRC <= 0) {

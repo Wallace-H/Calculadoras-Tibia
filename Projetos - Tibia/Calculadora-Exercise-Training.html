@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Exercise Training</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #020617;
+      --bg-input: #020617;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --success: #10b981;
+      --error: #ef4444;
+      --border: rgba(148, 163, 184, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, var(--bg-primary) 0, #020617 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 32px 26px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+
+    .header h1 {
+      font-size: 26px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 20px;
+      margin-bottom: 18px;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text-primary);
+    }
+
+    .form-group select,
+    .form-group input:not([type="checkbox"]) {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 2px solid rgba(56, 189, 248, 0.35);
+      background: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 14px;
+      transition: all 0.25s ease;
+      appearance: auto;
+    }
+
+    .form-group input {
+      border-width: 1px;
+      border-color: var(--border);
+    }
+
+    .form-group select:focus,
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #020617;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.16);
+    }
+
+    .form-group select option {
+      background: #020617;
+      color: var(--text-primary);
+    }
+
+    .form-group input::placeholder {
+      color: rgba(203, 213, 225, 0.6);
+    }
+
+    .input-hint {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0 18px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      margin-top: 4px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .button-row button {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0b1120;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(56, 189, 248, 0.35);
+    }
+
+    .btn-secondary {
+      background: rgba(15, 23, 42, 0.88);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(15, 23, 42, 1);
+    }
+
+    .result-section {
+      background: rgba(56, 189, 248, 0.06);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 8px;
+      padding: 18px 16px 14px;
+      text-align: center;
+    }
+
+    .result-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .result-value {
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--success);
+      margin-bottom: 4px;
+      font-family: "Courier New", monospace;
+    }
+
+    .result-per-unit {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .detail-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 10px 9px;
+      text-align: center;
+    }
+
+    .detail-label {
+      font-size: 10px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .detail-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-family: "Courier New", monospace;
+      word-break: break-word;
+    }
+
+    .warning {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #fecaca;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .warning.show {
+      display: block;
+    }
+
+    .formula-info {
+      background: #020617;
+      border-radius: 8px;
+      padding: 14px 12px;
+      margin-top: 18px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .formula-info strong {
+      color: var(--accent);
+    }
+
+    .formula-info code {
+      background: rgba(56, 189, 248, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--accent);
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 24px 18px 20px;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .result-value {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <h1>🏋️ Calculadora de Exercise Training</h1>
+        <p>
+          Planeje quanto skill você vai ganhar com Exercise Weapons no Tibia Global
+          ou no RubinOT (com rates diferenciados).
+        </p>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="servidor">Servidor</label>
+          <select id="servidor" onchange="onChangeServidor()">
+            <option value="global">Tibia Global</option>
+            <option value="rubinot">RubinOT</option>
+          </select>
+          <div class="input-hint">
+            No RubinOT, o treino segue os multiplicadores por faixa de skill.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="vocacao">Vocação</label>
+          <select id="vocacao">
+            <option value="">Selecione</option>
+            <option value="none">None / Rook</option>
+            <option value="knight">Knight / Elite Knight</option>
+            <option value="paladin">Paladin / Royal Paladin</option>
+            <option value="sorcerer">Sorcerer / Master Sorcerer</option>
+            <option value="druid">Druid / Elder Druid</option>
+          </select>
+          <div class="input-hint">Usado para escolher o multiplicador de skill (b).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="tipoSkill">Skill a treinar</label>
+          <select id="tipoSkill">
+            <option value="">Selecione</option>
+            <option value="melee">Melee (Sword/Axe/Club)</option>
+            <option value="distance">Distance</option>
+            <option value="shielding">Shielding</option>
+            <option value="magic">Magic Level</option>
+          </select>
+          <div class="input-hint">Escolha o tipo de skill que será treinado.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="skillAtual">Skill atual (nível)</label>
+          <input
+            type="number"
+            id="skillAtual"
+            min="1"
+            step="1"
+            placeholder="Ex: 90"
+          />
+          <div class="input-hint">Valor inteiro exibido na janela de skills.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="percentAtual">% que falta para o próximo nível</label>
+          <input
+            type="number"
+            id="percentAtual"
+            min="0"
+            max="99.99"
+            step="0.01"
+            value="0"
+          />
+          <div class="input-hint">Percentual que falta para o próximo skill (igual ao do jogo, 0 a 99.99).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="skillAlvo">Skill desejado (nível)</label>
+          <input
+            type="number"
+            id="skillAlvo"
+            min="1"
+            step="1"
+            placeholder="Ex: 100"
+          />
+          <div class="input-hint">Nível de skill que você quer alcançar.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="tipoArma">Tamanho da arma</label>
+          <select id="tipoArma">
+            <option value="">Selecione</option>
+            <option value="auto">Automático (mais eficiente)</option>
+            <option value="training">Training (50 charges)</option>
+            <option value="exercise">Exercise (500 charges)</option>
+            <option value="durable">Durable Exercise (1.800 charges)</option>
+            <option value="lasting">Lasting Exercise (14.400 charges)</option>
+          </select>
+          <div class="input-hint">
+            O tipo de arma é definido pela skill. No modo automático, a calculadora
+            escolhe o tamanho que mais reduz desperdício de cargas. Em RubinOT, inclui
+            Daily Exercise (45.000 charges).
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <label>Bônus de treino</label>
+          <div class="checkbox-row">
+            <label class="checkbox-item">
+              <input type="checkbox" id="exerciseDummy" />
+              <span>Exercise Dummy (+10% de eficiência)</span> 
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" id="doubleEvent" />
+              <span>Double Event (+100% de eficiência)</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" id="vipRubinot" />
+              <span>VIP (RubinOT: cargas 10% mais rápidas)</span>
+            </label>
+          </div>
+          <div class="input-hint">
+            VIP só afeta o tempo total no RubinOT (custo em armas permanece o mesmo).
+          </div>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button class="btn-primary" type="button" onclick="calcularExercise()">
+          Calcular
+        </button>
+        <button class="btn-secondary" type="button" onclick="resetarFormulario()">
+          Limpar
+        </button>
+      </div>
+
+      <div class="result-section" id="resultSection">
+        <div class="result-label">Custo total (Coins + Gold)</div>
+        <div class="result-value" id="custoTotal">0</div>
+        <div class="result-per-unit" id="custoTotalDescricao">
+          Custo estimado convertendo Tibia Coins para gold.
+        </div>
+
+        <div class="details-grid">
+          <div class="detail-item">
+            <div class="detail-label">Charges totais</div>
+            <div class="detail-value" id="chargesTotais">0</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Custo em Tibia Coins</div>
+            <div class="detail-value" id="custoCoins">0</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Custo em gold (NPC)</div>
+            <div class="detail-value" id="custoGoldNpc">0</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Tempo total</div>
+            <div class="detail-value" id="tempoTotal">0 min</div>
+          </div>
+        </div>
+
+        <div class="detail-item" id="armasDetalheItem" style="margin-top: 12px;">
+          <div class="detail-label">Armas necessárias</div>
+          <div class="detail-value" id="armasDetalhe" style="font-size: 12px; text-align: left;"></div>
+        </div>
+      </div>
+
+      <div class="warning" id="warning">
+        ⚠️ Preencha todos os campos com valores válidos e garanta que o skill alvo
+        seja maior que o skill atual.
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ======= Constantes de skill (A) e offset (c) - TibiaWiki Formulae =======
+    const SKILL_CONSTANTS = {
+      melee: 50,
+      distance: 30,
+      shielding: 100,
+      magic: 1600
+    };
+
+    const SKILL_OFFSETS = {
+      melee: 10,
+      distance: 10,
+      shielding: 10,
+      magic: 0
+    };
+
+    // Vocation constants (b) por vocação e tipo de skill (TibiaWiki)
+    const VOCATION_B = {
+      none: {
+        magic: 3.0,
+        melee: 2.0,
+        distance: 2.0,
+        shielding: 1.5
+      },
+      knight: {
+        magic: 3.0,
+        melee: 1.1,
+        distance: 1.4,
+        shielding: 1.1
+      },
+      paladin: {
+        magic: 1.4,
+        melee: 1.2,
+        distance: 1.1,
+        shielding: 1.1
+      },
+      sorcerer: {
+        magic: 1.1,
+        melee: 2.0,
+        distance: 2.0,
+        shielding: 1.5
+      },
+      druid: {
+        magic: 1.1,
+        melee: 1.8,
+        distance: 1.8,
+        shielding: 1.5
+      }
+    };
+
+    // ======= Exercise Weapons (Tibia Global + RubinOT) =======
+    const WEAPON_TYPES = {
+      training: {
+        charges: 50,
+        minutes: 1 + 40 / 60,
+        goldPrice: 0,
+        coinPrice: 0
+      },
+      exercise: {
+        charges: 500,
+        minutes: 16 + 40 / 60,
+        goldPrice: 347222,
+        coinPrice: 0
+      },
+      durable: {
+        charges: 1800,
+        minutes: 60,
+        goldPrice: 1250000,
+        coinPrice: 0
+      },
+      lasting: {
+        charges: 14400,
+        minutes: 8 * 60,
+        goldPrice: 10000000,
+        coinPrice: 0
+      },
+      dailyRubinot: {
+        charges: 45000,
+        minutes: (8 * 60) * (45000 / 14400),
+        goldPrice: 0,
+        coinPrice: 390
+      }
+    };
+
+    // Pontos equivalentes por charge (hits, blocks, mana, etc.)
+    const POINTS_PER_CHARGE = {
+      melee: 7.2,
+      bow: 4.32,
+      shield: 14.4,
+      wand: 600
+    };
+
+    // Mapeamento de skill para classe de arma
+    const SKILL_TO_WEAPON = {
+      melee: "melee",
+      distance: "bow",
+      shielding: "shield",
+      magic: "wand"
+    };
+
+    // Nomes legíveis dos tipos de arma
+    const WEAPON_LABELS = {
+      training: "Training (50)",
+      exercise: "Exercise (500)",
+      durable: "Durable Exercise (1.800)",
+      lasting: "Lasting Exercise (14.400)",
+      dailyRubinot: "Daily Exercise (45.000)"
+    };
+
+    // Preço de 1 Tibia Coin em gold (estimativa)
+    const GOLD_PER_COIN = 40000;
+
+    function parseNumero(valor) {
+      if (!valor && valor !== 0) return NaN;
+      return parseFloat(String(valor).replace(',', '.'));
+    }
+
+    function pointsForNextLevel(skillType, vocationKey, skillLevel) {
+      const A = SKILL_CONSTANTS[skillType];
+      const c = SKILL_OFFSETS[skillType];
+      const b = VOCATION_B[vocationKey]?.[skillType];
+      if (!A || (!b && b !== 0)) return NaN;
+      const exponent = skillLevel - c;
+      if (exponent < 0) return NaN;
+      return A * Math.pow(b, exponent);
+    }
+
+    function formatNumberBR(value, decimals = 2) {
+      if (!isFinite(value)) return "0";
+      return value.toLocaleString("pt-BR", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
+    }
+
+    function formatIntBR(value) {
+      if (!isFinite(value)) return "0";
+      return Math.round(value).toLocaleString("pt-BR");
+    }
+
+    function formatTempo(minutesTotal) {
+      if (!isFinite(minutesTotal) || minutesTotal <= 0) return "0 min";
+      const totalMin = Math.round(minutesTotal);
+      const dias = Math.floor(totalMin / (60 * 24));
+      const resto = totalMin % (60 * 24);
+      const horas = Math.floor(resto / 60);
+      const mins = resto % 60;
+
+      const partes = [];
+      if (dias > 0) partes.push(`${dias}d`);
+      if (horas > 0) partes.push(`${horas}h`);
+      if (mins > 0) partes.push(`${mins}min`);
+      return partes.join(" ") || "0 min";
+    }
+
+    // Multiplicadores por faixa do RubinOT (imagem fornecida)
+    function getRubinotRate(skillType, level) {
+      if (skillType === "magic") {
+        if (level <= 80) return 10;
+        if (level <= 100) return 7;
+        if (level <= 120) return 4;
+        if (level <= 130) return 3;
+        return 2;
+      } else {
+        // melee, distance, shielding
+        if (level <= 80) return 10;
+        if (level <= 100) return 7;
+        if (level <= 120) return 4;
+        return 2;
+      }
+    }
+
+    function onChangeServidor() {
+      const servidor = document.getElementById("servidor").value;
+      const tipoArmaSelect = document.getElementById("tipoArma");
+
+      // procura se já existe Daily RubinOT
+      let dailyOption = Array.from(tipoArmaSelect.options).find(
+        (opt) => opt.value === "dailyRubinot"
+      );
+
+      if (servidor === "rubinot") {
+        if (!dailyOption) {
+          dailyOption = document.createElement("option");
+          dailyOption.value = "dailyRubinot";
+          dailyOption.textContent = "Daily Exercise (45.000 charges - RubinOT)";
+          tipoArmaSelect.appendChild(dailyOption);
+        }
+      } else {
+        if (dailyOption) {
+          if (tipoArmaSelect.value === "dailyRubinot") {
+            tipoArmaSelect.value = "";
+          }
+          tipoArmaSelect.removeChild(dailyOption);
+        }
+      }
+    }
+
+    function calcularTotalChargesNecessarias(
+      tipoSkill, vocacao, servidor, skillAtual, skillAlvo, percentAtual, extraMultiplier
+    ) {
+      const ptsPerCharge = POINTS_PER_CHARGE[SKILL_TO_WEAPON[tipoSkill]];
+      let chargesTotal = 0;
+
+      for (let s = skillAtual; s < skillAlvo; s++) {
+        const ptsBase = pointsForNextLevel(tipoSkill, vocacao, s);
+        if (!Number.isFinite(ptsBase) || ptsBase <= 0) continue;
+
+        let ptsRestantes = ptsBase;
+        if (s === skillAtual) {
+          ptsRestantes = ptsBase * percentAtual;
+        }
+
+        let rateServidor = 1;
+        if (servidor === "rubinot") {
+          rateServidor = getRubinotRate(tipoSkill, s);
+        }
+
+        const efetivo = rateServidor * extraMultiplier;
+        const chargesNivel = ptsRestantes / (ptsPerCharge * efetivo);
+        chargesTotal += chargesNivel;
+      }
+
+      return chargesTotal;
+    }
+
+    function allocateGreedy(chargesNeeded, servidor, vipRubinot) {
+      const availableTypes = ["training"];
+      if (servidor === "global") {
+        availableTypes.push("exercise", "durable", "lasting");
+      } else {
+        availableTypes.push("exercise", "durable", "lasting", "dailyRubinot");
+      }
+
+      // Ordenado por maior carga primeiro
+      const sorted = availableTypes
+        .map(k => ({ key: k, charges: WEAPON_TYPES[k].charges }))
+        .sort((a, b) => b.charges - a.charges);
+
+      const allocation = [];
+      let remaining = chargesNeeded;
+
+      for (const item of sorted) {
+        if (remaining <= 0) break;
+        // Só usa se uma única arma não ultrapassar o necessário
+        if (item.charges > chargesNeeded) continue;
+
+        const qty = Math.floor(remaining / item.charges);
+        if (qty > 0) {
+          allocation.push({ key: item.key, qty });
+          remaining -= item.charges * qty;
+        }
+      }
+
+      // Se ainda sobrou, completar com a menor arma (training)
+      if (remaining > 0) {
+        const trainingCharges = WEAPON_TYPES.training.charges;
+        const extra = Math.ceil(remaining / trainingCharges);
+        const existing = allocation.find(a => a.key === "training");
+        if (existing) {
+          existing.qty += extra;
+        } else {
+          allocation.unshift({ key: "training", qty: extra });
+        }
+        remaining = 0;
+      }
+
+      // Montar resultado agregado
+      let totalCharges = 0;
+      let totalCoins = 0;
+      let totalGold = 0;
+      let totalMinutes = 0;
+      const labels = [];
+
+      for (const a of allocation) {
+        const w = WEAPON_TYPES[a.key];
+        const ch = w.charges * a.qty;
+        totalCharges += ch;
+        totalCoins += w.coinPrice * a.qty;
+        totalGold += w.goldPrice * a.qty;
+        totalMinutes += w.minutes * a.qty;
+        labels.push(`${WEAPON_LABELS[a.key]} × ${a.qty}`);
+      }
+
+      if (servidor === "rubinot" && vipRubinot) totalMinutes *= 0.9;
+
+      return {
+        allocation,
+        chargesTot: totalCharges,
+        costGold: totalGold,
+        costCoins: totalCoins,
+        tempo: totalMinutes,
+        totalCostEquivalent: totalGold + totalCoins * GOLD_PER_COIN,
+        waste: totalCharges - chargesNeeded,
+        labels
+      };
+    }
+
+    function calcularExercise() {
+      const servidor = document.getElementById("servidor").value;
+      const vocacao = document.getElementById("vocacao").value;
+      const tipoSkill = document.getElementById("tipoSkill").value;
+      const skillAtualVal = parseNumero(document.getElementById("skillAtual").value);
+      const percentAtualVal = parseNumero(
+        document.getElementById("percentAtual").value || "0"
+      );
+      const skillAlvoVal = parseNumero(document.getElementById("skillAlvo").value);
+      const tipoArma = document.getElementById("tipoArma").value;
+
+      const exerciseDummy = document.getElementById("exerciseDummy").checked;
+      const doubleEvent = document.getElementById("doubleEvent").checked;
+      const vipRubinot = document.getElementById("vipRubinot").checked;
+
+      const warning = document.getElementById("warning");
+      warning.classList.remove("show");
+      warning.textContent =
+        "⚠️ Preencha todos os campos com valores válidos e garanta que o skill alvo seja maior que o skill atual.";
+
+      if (
+        !vocacao ||
+        !tipoSkill ||
+        !tipoArma ||
+        !Number.isFinite(skillAtualVal) ||
+        !Number.isFinite(skillAlvoVal) ||
+        skillAtualVal <= 0 ||
+        skillAlvoVal <= 0 ||
+        skillAlvoVal <= skillAtualVal ||
+        percentAtualVal < 0 ||
+        percentAtualVal >= 100
+      ) {
+        warning.classList.add("show");
+        atualizarResultados({ chargesTot: 0 });
+        return;
+      }
+
+      const ptsPerCharge = POINTS_PER_CHARGE[SKILL_TO_WEAPON[tipoSkill]];
+      if (!ptsPerCharge) {
+        warning.classList.add("show");
+        atualizarResultados({ chargesTot: 0 });
+        return;
+      }
+
+      const A = SKILL_CONSTANTS[tipoSkill];
+      const b = VOCATION_B[vocacao]?.[tipoSkill];
+
+      if (!A || (!b && b !== 0)) {
+        warning.classList.add("show");
+        atualizarResultados({ chargesTot: 0 });
+        return;
+      }
+
+      const skillAtual = Math.floor(skillAtualVal);
+      const skillAlvo = Math.floor(skillAlvoVal);
+      const percentAtual = Math.max(0, Math.min(99.9999, percentAtualVal)) / 100;
+
+      const extraMultiplier =
+        (exerciseDummy ? 1.1 : 1) * (doubleEvent ? 2.0 : 1.0);
+
+      let bestResult;
+
+      if (tipoArma === "auto") {
+        const chargesNeeded = calcularTotalChargesNecessarias(
+          tipoSkill, vocacao, servidor, skillAtual, skillAlvo, percentAtual, extraMultiplier
+        );
+
+        if (!Number.isFinite(chargesNeeded) || chargesNeeded <= 0) {
+          atualizarResultados({ chargesTot: 0 });
+          return;
+        }
+
+        bestResult = allocateGreedy(chargesNeeded, servidor, vipRubinot);
+      } else {
+        const weaponData = WEAPON_TYPES[tipoArma];
+        if (!weaponData) {
+          warning.classList.add("show");
+          atualizarResultados({ chargesTot: 0 });
+          return;
+        }
+
+        const chargesNeeded = calcularTotalChargesNecessarias(
+          tipoSkill, vocacao, servidor, skillAtual, skillAlvo, percentAtual, extraMultiplier
+        );
+
+        if (!Number.isFinite(chargesNeeded) || chargesNeeded <= 0) {
+          atualizarResultados({ chargesTot: 0 });
+          return;
+        }
+
+        const armasNec = Math.ceil(chargesNeeded / weaponData.charges);
+        const chargesTot = armasNec * weaponData.charges;
+        let tempo = armasNec * weaponData.minutes;
+        if (servidor === "rubinot" && vipRubinot) tempo *= 0.9;
+        const costGold = armasNec * weaponData.goldPrice;
+        const costCoins = armasNec * weaponData.coinPrice;
+
+        bestResult = {
+          allocation: [{ key: tipoArma, qty: armasNec }],
+          chargesTot,
+          tempo,
+          costGold,
+          costCoins,
+          totalCostEquivalent: costGold + costCoins * GOLD_PER_COIN,
+          waste: chargesTot - chargesNeeded,
+          labels: [`${WEAPON_LABELS[tipoArma]} × ${armasNec}`]
+        };
+      }
+
+      atualizarResultados(bestResult);
+    }
+
+    function atualizarResultados(r) {
+      const totalArmas = (r.allocation || []).reduce((s, a) => s + a.qty, 0);
+      const spanCharges = document.getElementById("chargesTotais");
+      const spanCustoGold = document.getElementById("custoGoldNpc");
+      const spanTempo = document.getElementById("tempoTotal");
+      const spanCustoCoins = document.getElementById("custoCoins");
+      const spanCustoTotal = document.getElementById("custoTotal");
+      const spanCustoTotalDesc = document.getElementById("custoTotalDescricao");
+      const spanArmasDetalhe = document.getElementById("armasDetalhe");
+
+      spanCharges.textContent = formatIntBR(r.chargesTot);
+      spanCustoGold.textContent = r.chargesTot > 0 ? `${formatIntBR(r.costGold)} gp` : "0";
+      spanTempo.textContent = r.tempo > 0 ? formatTempo(r.tempo) : "0 min";
+      spanCustoCoins.textContent = r.chargesTot > 0 ? `${formatIntBR(r.costCoins)} TC` : "0";
+
+      if (r.chargesTot > 0 && r.costCoins > 0 && r.costGold > 0) {
+        spanCustoTotal.textContent = `${formatIntBR(r.costCoins)} TC + ${formatIntBR(r.costGold)} gp`;
+        spanCustoTotalDesc.textContent = `Soma de Tibia Coins e gold gastos`;
+      } else if (r.chargesTot > 0 && r.costCoins > 0) {
+        spanCustoTotal.textContent = `${formatIntBR(r.costCoins)} TC`;
+        spanCustoTotalDesc.textContent = `Tibia Coins gastos`;
+      } else if (r.chargesTot > 0 && r.costGold > 0) {
+        spanCustoTotal.textContent = `${formatIntBR(r.costGold)} gp`;
+        spanCustoTotalDesc.textContent = `Gold gastos no NPC`;
+      } else {
+        spanCustoTotal.textContent = "0";
+        spanCustoTotalDesc.textContent = "Custo total em Coins e Gold.";
+      }
+
+      if (r.labels && r.labels.length > 0) {
+        spanArmasDetalhe.textContent = r.labels.join(" + ");
+      } else {
+        spanArmasDetalhe.textContent = "0";
+      }
+    }
+
+    function resetarFormulario() {
+      document.getElementById("servidor").value = "global";
+      document.getElementById("vocacao").value = "";
+      document.getElementById("tipoSkill").value = "";
+      document.getElementById("skillAtual").value = "";
+      document.getElementById("percentAtual").value = "0";
+      document.getElementById("skillAlvo").value = "";
+      document.getElementById("tipoArma").value = "";
+      document.getElementById("exerciseDummy").checked = false;
+      document.getElementById("doubleEvent").checked = false;
+      document.getElementById("vipRubinot").checked = false;
+
+      const warning = document.getElementById("warning");
+      warning.classList.remove("show");
+
+      onChangeServidor();
+      atualizarResultados({ chargesTot: 0 });
+    }
+
+    onChangeServidor();
+    atualizarResultados({});
+  </script>
+</body>
+</html>

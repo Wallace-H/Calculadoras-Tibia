@@ -89,16 +89,6 @@ select:focus,input:focus {
     border-color:var(--color-primary);
 }
 
-.btn {
-    width:100%;
-    padding:14px;
-    background:linear-gradient(135deg,#38bdf8,#06b6d4);
-    border:none;
-    border-radius:8px;
-    color:white;
-    font-weight:600;
-    cursor:pointer;
-}
 
 .results {
     background:var(--color-bg-surface);
@@ -194,31 +184,30 @@ select:focus,input:focus {
 
 <div class="form-group">
 <label for="spell">Selecione a Spell:</label>
-<select id="spell" onchange="updateSpellPreview()">
+<select id="spell" onchange="updateSpellPreview(); calculateDamage();">
 <option value="">-- Selecione uma vocação primeiro --</option>
 </select>
 </div>
 
 <div id="spellPreview" style="display:none;">
-<div class="spell-icon placeholder" id="spellIconPreview">📜</div>
+<div class="spell-icon" id="spellIconPreview">📜</div>
 </div>
 
 <div class="form-group">
 <label for="magic">Magic Level:</label>
-<input type="number" id="magic" value="0" min="0">
+<input type="number" id="magic" value="0" min="0" oninput="calculateDamage()">
 </div>
 
 <div class="form-group">
 <label for="levelDmg">Level DMG Bonus:</label>
-<input type="number" id="levelDmg" value="0" min="0">
+<input type="number" id="levelDmg" value="0" min="0" oninput="calculateDamage()">
 </div>
 
 <div class="form-group">
 <label for="boost">Bônus % (Roda, Proficiência, etc):</label>
-<input type="number" id="boost" value="0" min="0" step="0.5">
+<input type="number" id="boost" value="0" min="0" step="0.5" oninput="calculateDamage()">
 </div>
 
-<button class="btn" onclick="calculateDamage()">Calcular Dano</button>
 </div>
 
 <div class="card">
@@ -296,7 +285,6 @@ const levelDmg=parseFloat(document.getElementById('levelDmg').value)||0;
 const boost=parseFloat(document.getElementById('boost').value)||0;
 
 if(!vocation||spellIndex===""){
-alert("Selecione vocação e spell.");
 return;
 }
 
