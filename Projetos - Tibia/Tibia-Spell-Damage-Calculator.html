@@ -1,228 +1,259 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tibia Spell Damage Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tibia Spell Damage Calculator</title>
 
-<style>
-:root {
-    --color-bg-base: #0f172a;
-    --color-bg-surface: #1e293b;
-    --color-text-primary: #f1f5f9;
-    --color-text-secondary: #cbd5e1;
-    --color-primary: #38bdf8;
-    --color-primary-hover: #0284c7;
-    --color-accent: #06b6d4;
-}
+    <style>
+        :root {
+            --color-bg-base: #0f172a;
+            --color-bg-surface: #1e293b;
+            --color-text-primary: #f1f5f9;
+            --color-text-secondary: #cbd5e1;
+            --color-primary: #38bdf8;
+            --color-primary-hover: #0284c7;
+            --color-accent: #06b6d4;
+        }
 
-* { margin:0; padding:0; box-sizing:border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-    background:linear-gradient(135deg,#0f172a 0%,#1a1f35 100%);
-    color:var(--color-text-primary);
-    padding:20px;
-    min-height:100vh;
-}
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1a1f35 100%);
+            color: var(--color-text-primary);
+            padding: 20px;
+            min-height: 100vh;
+        }
 
-.container { max-width:900px; margin:0 auto; }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-.header { text-align:center; margin-bottom:40px; }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
-.header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    background: linear-gradient(135deg, #38bdf8, #06b6d4);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-}
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #38bdf8, #06b6d4);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
 
-.header p {
-    color:var(--color-text-secondary);
-    font-size:1.1rem;
-}
+        .header p {
+            color: var(--color-text-secondary);
+            font-size: 1.1rem;
+        }
 
-.content {
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:30px;
-    margin-bottom:30px;
-}
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
 
-.card {
-    background:var(--color-bg-surface);
-    border:1px solid rgba(56,189,248,0.2);
-    border-radius:12px;
-    padding:24px;
-}
+        .card {
+            background: var(--color-bg-surface);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+        }
 
-.card-title {
-    font-size:1.3rem;
-    margin-bottom:20px;
-    color:var(--color-primary);
-    font-weight:600;
-}
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--color-primary);
+            font-weight: 600;
+        }
 
-.form-group { margin-bottom:20px; }
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-label {
-    display:block;
-    margin-bottom:8px;
-    font-weight:500;
-    color:var(--color-text-secondary);
-}
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+        }
 
-select,input {
-    width:100%;
-    padding:12px;
-    background:#0f172a;
-    border:2px solid rgba(56,189,248,0.3);
-    border-radius:8px;
-    color:var(--color-text-primary);
-    font-size:1rem;
-}
+        select,
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            border: 2px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            color: var(--color-text-primary);
+            font-size: 1rem;
+        }
 
-select:focus,input:focus {
-    outline:none;
-    border-color:var(--color-primary);
-}
+        select:focus,
+        input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
 
 
-.results {
-    background:var(--color-bg-surface);
-    border:2px solid rgba(6,182,212,0.3);
-    border-radius:12px;
-    padding:24px;
-    margin-top:20px;
-}
+        .results {
+            background: var(--color-bg-surface);
+            border: 2px solid rgba(6, 182, 212, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 20px;
+        }
 
-.result-item {
-    display:flex;
-    gap:15px;
-    margin-bottom:15px;
-    padding-bottom:15px;
-    border-bottom:1px solid rgba(56,189,248,0.1);
-}
+        .result-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.1);
+        }
 
-.result-item:last-child {
-    border-bottom:none;
-    margin-bottom:0;
-    padding-bottom:0;
-}
+        .result-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
 
-.result-spell-icon {
-    width:50px;
-    height:50px;
-    border-radius:8px;
-    background:rgba(56,189,248,0.1);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-}
+        .result-spell-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background: rgba(56, 189, 248, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
 
-.result-spell-icon img {
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
+        .result-spell-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-.result-content { flex:1; }
+        .result-content {
+            flex: 1;
+        }
 
-.result-spell-name {
-    font-weight:600;
-    color:var(--color-primary);
-    margin-bottom:4px;
-}
+        .result-spell-name {
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 4px;
+        }
 
-.result-damage {
-    font-size:1.1rem;
-    font-weight:700;
-}
+        .result-damage {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
 
-.damage-breakdown {
-    font-size:0.85rem;
-    color:var(--color-accent);
-    margin-top:6px;
-}
+        .damage-breakdown {
+            font-size: 0.85rem;
+            color: var(--color-accent);
+            margin-top: 6px;
+        }
 
-.stage-info {
-    font-size:0.8rem;
-    color:var(--color-accent);
-}
+        .stage-info {
+            font-size: 0.8rem;
+            color: var(--color-accent);
+        }
 
-@media (max-width:768px){
-    .content{grid-template-columns:1fr;}
-}
-</style>
+        @media (max-width:768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container">
-<div class="header">
-<h1>⚔️ Tibia Spell Damage Calculator</h1>
-<p>Calcule o dano das suas spells favoritas</p>
-</div>
+    <div class="container">
+        <div class="header">
+            <h1>⚔️ Tibia Spell Damage Calculator</h1>
+            <p>Calcule o dano das suas spells favoritas</p>
+        </div>
 
-<div class="content">
+        <div class="content">
 
-<div class="card">
-<div class="card-title">Configurações</div>
+            <div class="card">
+                <div class="card-title">Configurações</div>
 
-<div class="form-group">
-<label for="vocation">Selecione a Vocação:</label>
-<select id="vocation" onchange="updateSpells()">
-<option value="">-- Escolha uma vocação --</option>
-<option value="sorcerer">Master Sorcerer</option>
-<option value="druid">Elder Druid</option>
-<option value="paladin">Royal Paladin</option>
-</select>
-</div>
+                <div class="form-group">
+                    <label for="vocation">Selecione a Vocação:</label>
+                    <select id="vocation" onchange="updateSpells()">
+                        <option value="">-- Escolha uma vocação --</option>
+                        <option value="sorcerer">Master Sorcerer</option>
+                        <option value="druid">Elder Druid</option>
+                        <option value="paladin">Royal Paladin</option>
+                        <option value="monk">Exalted Monk</option>
+                        <option value="knight">Elite Knight</option>
+                    </select>
+                </div>
 
-<div class="form-group">
-<label for="spell">Selecione a Spell:</label>
-<select id="spell" onchange="updateSpellPreview(); calculateDamage();">
-<option value="">-- Selecione uma vocação primeiro --</option>
-</select>
-</div>
+                <div class="form-group">
+                    <label for="spell">Selecione a Spell:</label>
+                    <select id="spell" onchange="updateSpellPreview(); calculateDamage();">
+                        <option value="">-- Selecione uma vocação primeiro --</option>
+                    </select>
+                </div>
 
-<div id="spellPreview" style="display:none;">
-<div class="spell-icon" id="spellIconPreview">📜</div>
-</div>
+                <div id="spellPreview" style="display:none;">
+                    <div class="spell-icon" id="spellIconPreview">📜</div>
+                </div>
 
-<div class="form-group">
-<label for="magic">Magic Level:</label>
-<input type="number" id="magic" value="0" min="0" oninput="calculateDamage()">
-</div>
+                <div class="form-group" id="magicGroup">
+                    <label for="magic">Magic Level:</label>
+                    <input type="number" id="magic" value="0" min="0" oninput="calculateDamage()">
+                </div>
 
-<div class="form-group">
-<label for="levelDmg">Level DMG Bonus:</label>
-<input type="number" id="levelDmg" value="0" min="0" oninput="calculateDamage()">
-</div>
+                <div class="form-group" id="skillGroup" style="display:none;">
+                    <label for="skill">Skill (Melee):</label>
+                    <input type="number" id="skill" value="0" min="0" oninput="calculateDamage()">
+                </div>
 
-<div class="form-group">
-<label for="boost">Bônus % (Roda, Proficiência, etc):</label>
-<input type="number" id="boost" value="0" min="0" step="0.5" oninput="calculateDamage()">
-</div>
+                <div class="form-group" id="weaponAtkGroup" style="display:none;">
+                    <label for="weaponAtk">Weapon Attack:</label>
+                    <input type="number" id="weaponAtk" value="0" min="0" oninput="calculateDamage()">
+                </div>
 
-</div>
+                <div class="form-group">
+                    <label for="levelDmg">Level DMG Bonus:</label>
+                    <input type="number" id="levelDmg" value="0" min="0" oninput="calculateDamage()">
+                </div>
 
-<div class="card">
-<div class="card-title">Resultados</div>
-<div id="results" class="results">
-Selecione uma spell e clique em calcular.
-</div>
-</div>
+                <div class="form-group">
+                    <label for="boost">Bônus % (Roda, Proficiência, etc):</label>
+                    <input type="number" id="boost" value="0" min="0" step="0.5" oninput="calculateDamage()">
+                </div>
 
-</div>
-</div>
+            </div>
 
-<script>
+            <div class="card">
+                <div class="card-title">Resultados</div>
+                <div id="results" class="results">
+                    Selecione uma spell e clique em calcular.
+                </div>
+            </div>
 
-const spellsByVocation = {
+        </div>
+    </div>
+
+    <script>
+
+        const spellsByVocation = {
             sorcerer: [
                 { name: 'Great Fire Wave', basePower: 100, imageUrl: 'https://www.tibiawiki.com.br/images/1/1d/Great_Fire_Wave.gif' },
                 { name: 'Energy Wave', basePower: 150, imageUrl: 'https://www.tibiawiki.com.br/images/7/7d/Energy_Wave.gif' },
@@ -241,106 +272,188 @@ const spellsByVocation = {
                 { name: 'Eternal Winter', basePower: 200, imageUrl: 'https://www.tibiawiki.com.br/images/6/6e/Eternal_Winter.gif' },
                 { name: 'Twin Bursts', basePower: 115, imageUrl: 'https://www.tibiawiki.com.br/images/0/0d/Twin_Bursts.gif', stages: [20, 40, 60] }
             ],
-            monk: [],
-            knight: []
+            monk: [
+                { name: 'Chained Penance', basePower: 70, imageUrl: 'https://www.tibiawiki.com.br/images/a/a2/Chained_Penance.gif' },
+                { name: 'Greater Flurry of Blows', basePower: 86, imageUrl: 'https://www.tibiawiki.com.br/images/4/4a/Greater_Flurry_of_Blows.gif' },
+                { name: 'Flurry of Blows', basePower: 55, imageUrl: 'https://www.tibiawiki.com.br/images/7/74/Flurry_of_Blows.gif' },
+                { name: 'Sweeping Takedown', basePower: 48, imageUrl: 'https://www.tibiawiki.com.br/images/f/f9/Sweeping_Takedown.gif', virtue: 208 },
+                { name: 'Spiritual Outburst', basePower: 42, imageUrl: 'https://www.tibiawiki.com.br/images/b/b5/Spiritual_Outburst.gif', virtue: 208, repeatStages: [37.5, 50, 62.5] },
+                { name: 'Mystic Repulse', basePower: 72, imageUrl: 'https://www.tibiawiki.com.br/images/a/aa/Mystic_Repulse.gif' },
+                { name: 'Forceful Uppercut', basePower: 130, imageUrl: 'https://www.tibiawiki.com.br/images/3/3f/Forceful_Uppercut.gif' },
+                { name: 'Devastating Knockout', basePower: 62, imageUrl: 'https://www.tibiawiki.com.br/images/f/f5/Devastating_Knockout.gif', virtue: 208 },
+                { name: 'Double Jab', basePower: 40, imageUrl: 'https://www.tibiawiki.com.br/images/2/28/Double_Jab.gif' },
+                { name: 'Greater Tiger Clash', basePower: 44, imageUrl: 'https://www.tibiawiki.com.br/images/6/6b/Greater_Tiger_Clash.gif', virtue: 208 }
+            ],
+            knight: [
+                { name: 'Fierce Berserk', basePower: 92, imageUrl: 'https://www.tibiawiki.com.br/images/1/1a/Fierce_Berserk.gif' },
+                { name: 'Berserk', basePower: 44, imageUrl: 'https://www.tibiawiki.com.br/images/f/f3/Berserk.gif' },
+                { name: 'Groundshaker', basePower: 32, imageUrl: 'https://www.tibiawiki.com.br/images/4/44/Groundshaker.gif' },
+                { name: 'Front Sweep', basePower: 72, imageUrl: 'https://www.tibiawiki.com.br/images/f/f8/Front_Sweep.gif' },
+                { name: 'Executioner\'s Throw', basePower: 60, imageUrl: 'https://www.tibiawiki.com.br/images/7/70/Executioner%27s_Throw.gif', damageStages: [100, 125, 150] },
+                { name: 'Annihilation', basePower: 125, imageUrl: 'https://www.tibiawiki.com.br/images/4/40/Annihilation.gif' },
+                { name: 'Brutal Strike', basePower: 39, imageUrl: 'https://www.tibiawiki.com.br/images/b/be/Brutal_Strike.gif' },
+                { name: 'Whirlwind Throw', basePower: 32, imageUrl: 'https://www.tibiawiki.com.br/images/8/85/Whirlwind_Throw.gif' }
+            ]
         };
 
-function updateSpells(){
-const vocation=document.getElementById('vocation').value;
-const spellSelect=document.getElementById('spell');
-spellSelect.innerHTML='<option value="">-- Selecione uma spell --</option>';
-if(!vocation)return;
+        function updateSpells() {
+            const vocation = document.getElementById('vocation').value;
+            const spellSelect = document.getElementById('spell');
+            spellSelect.innerHTML = '<option value="">-- Selecione uma spell --</option>';
+            if (!vocation) return;
 
-spellsByVocation[vocation].forEach((spell,index)=>{
-const opt=document.createElement('option');
-opt.value=index;
-opt.textContent=spell.name;
-spellSelect.appendChild(opt);
-});
-}
+            const isMelee = vocation === 'knight' || vocation === 'monk';
+            document.getElementById('magicGroup').style.display = isMelee ? 'none' : '';
+            document.getElementById('skillGroup').style.display = isMelee ? '' : 'none';
+            document.getElementById('weaponAtkGroup').style.display = isMelee ? '' : 'none';
 
-function updateSpellPreview(){
-const vocation=document.getElementById('vocation').value;
-const spellIndex=document.getElementById('spell').value;
-const preview=document.getElementById('spellPreview');
-const icon=document.getElementById('spellIconPreview');
+            spellsByVocation[vocation].forEach((spell, index) => {
+                const opt = document.createElement('option');
+                opt.value = index;
+                opt.textContent = spell.name;
+                spellSelect.appendChild(opt);
+            });
+        }
 
-if(vocation && spellIndex!==""){
-preview.style.display="block";
-const spell=spellsByVocation[vocation][spellIndex];
-icon.innerHTML=spell.imageUrl.trim()
-? `<img src="${spell.imageUrl}" alt="${spell.name}">`
-: '📜';
-}else{
-preview.style.display="none";
-}
-}
+        function updateSpellPreview() {
+            const vocation = document.getElementById('vocation').value;
+            const spellIndex = document.getElementById('spell').value;
+            const preview = document.getElementById('spellPreview');
+            const icon = document.getElementById('spellIconPreview');
 
-function calculateDamage(){
+            if (vocation && spellIndex !== "") {
+                preview.style.display = "block";
+                const spell = spellsByVocation[vocation][spellIndex];
+                icon.innerHTML = spell.imageUrl.trim()
+                    ? `<img src="${spell.imageUrl}" alt="${spell.name}">`
+                    : '📜';
+            } else {
+                preview.style.display = "none";
+            }
+        }
 
-const vocation=document.getElementById('vocation').value;
-const spellIndex=document.getElementById('spell').value;
-const ml=parseFloat(document.getElementById('magic').value)||0;
-const levelDmg=parseFloat(document.getElementById('levelDmg').value)||0;
-const boost=parseFloat(document.getElementById('boost').value)||0;
+        function calculateDamage() {
 
-if(!vocation||spellIndex===""){
-return;
-}
+            const vocation = document.getElementById('vocation').value;
+            const spellIndex = document.getElementById('spell').value;
+            const ml = parseFloat(document.getElementById('magic').value) || 0;
+            const skill = parseFloat(document.getElementById('skill').value) || 0;
+            const weaponAtk = parseFloat(document.getElementById('weaponAtk').value) || 0;
+            const levelDmg = parseFloat(document.getElementById('levelDmg').value) || 0;
+            const boost = parseFloat(document.getElementById('boost').value) || 0;
 
-const spell=spellsByVocation[vocation][spellIndex];
-const results=document.getElementById('results');
+            if (!vocation || spellIndex === "") {
+                return;
+            }
 
-const basePowerComBonus=spell.basePower*(1+boost/100);
+            const spell = spellsByVocation[vocation][spellIndex];
+            const results = document.getElementById('results');
+            const isMelee = vocation === 'knight' || vocation === 'monk';
 
-function formula(bp){
-return (ml*bp/25 + bp/4) + levelDmg;
-}
+            const basePowerComBonus = spell.basePower * (1 + boost / 100);
 
-let html=`<div class="result-item">
+            // Retorna apenas o dano da spell (sem LevelDmg)
+            function formulaBase(bp) {
+                if (isMelee) {
+                    return skill * weaponAtk * bp / 1000 + bp / 4;
+                }
+                return ml * bp / 25 + bp / 4;
+            }
+
+            // Dano total: spell + LevelDmg
+            function formula(bp) {
+                return levelDmg + formulaBase(bp);
+            }
+
+            // Dano total com Virtue: spell * (1 + virtue%) + LevelDmg
+            function formulaVirtue(bp, virtueBonus) {
+                return levelDmg + formulaBase(bp) * (1 + virtueBonus / 100);
+            }
+
+            let html = `<div class="result-item">
 <div class="result-spell-icon">
-${spell.imageUrl.trim()?`<img src="${spell.imageUrl}">`:'📜'}
+${spell.imageUrl.trim() ? `<img src="${spell.imageUrl}">` : '📜'}
 </div>
 <div class="result-content">
 <div class="result-spell-name">${spell.name}</div>`;
 
-if (spell.stages) {
+            if (spell.stages) {
 
-    // Valor base igual a qualquer outra spell (já com bônus % aplicado)
-    const baseNormalBonus = Math.floor(formula(basePowerComBonus));
-    const baseNormalSemBonus = Math.floor(formula(spell.basePower));
+                // Valor base igual a qualquer outra spell (já com bônus % aplicado)
+                const baseNormalBonus = Math.floor(formula(basePowerComBonus));
+                const baseNormalSemBonus = Math.floor(formula(spell.basePower));
 
-    html += `<div>Base: <strong>${baseNormalBonus}</strong></div>`;
+                html += `<div>Base: <strong>${baseNormalBonus}</strong></div>`;
 
-    spell.stages.forEach((stage) => {
+                spell.stages.forEach((stage) => {
 
-        // Aplica % de estágio SOBRE o valor final já calculado
-        const stageBonusValue = Math.floor(baseNormalBonus * (1 + stage / 100));
-        const stageNormalValue = Math.floor(baseNormalSemBonus * (1 + stage / 100));
+                    // Aplica % de estágio SOBRE o valor final já calculado
+                    const stageBonusValue = Math.floor(baseNormalBonus * (1 + stage / 100));
+                    const stageNormalValue = Math.floor(baseNormalSemBonus * (1 + stage / 100));
 
-        const diferencaStage = stageBonusValue - stageNormalValue;
+                    const diferencaStage = stageBonusValue - stageNormalValue;
 
-        html += `
+                    html += `
             <div>Base +${stage}%: <strong>${stageBonusValue}</strong></div>
             ${boost > 0 ? `<div class="damage-breakdown">Aumentou ${diferencaStage} com ${boost}% de bônus</div>` : ''}
         `;
-    });
+                });
 
-    html += `<div class="stage-info">Estágios independentes (não acumulativos)</div>`;
-}else{
+                html += `<div class="stage-info">Estágios independentes (não acumulativos)</div>`;
+            } else {
 
-const danoBonus=Math.floor(formula(basePowerComBonus));
-const danoNormal=Math.floor(formula(spell.basePower));
-const diferenca=danoBonus-danoNormal;
+                const danoBonus = Math.floor(formula(basePowerComBonus));
+                const danoNormal = Math.floor(formula(spell.basePower));
+                const diferenca = danoBonus - danoNormal;
 
-html+=`<div class="result-damage">${danoBonus} de dano</div>
-${boost>0?`<div class="damage-breakdown">Aumentou ${Math.floor(diferenca)} com ${boost}% de bônus</div>`:''}`;
-}
+                html += `<div class="result-damage">${danoBonus} de dano</div>
+${boost > 0 ? `<div class="damage-breakdown">Aumentou ${Math.floor(diferenca)} com ${boost}% de bônus</div>` : ''}`;
 
-html+=`</div></div>`;
-results.innerHTML=html;
-}
+                // Virtue bonus
+                if (spell.virtue) {
+                    const comVirtue = Math.floor(formulaVirtue(basePowerComBonus, spell.virtue));
+                    const diferencaVirtue = comVirtue - danoBonus;
+                    html += `
+        <div class="stage-info" style="margin-top:8px;">⚡ Com VoH (+${spell.virtue}%):</div>
+        <div class="result-damage" style="color:#a78bfa;">${comVirtue} de dano</div>
+        ${boost > 0 ? `<div class="damage-breakdown">(+${diferencaVirtue} vs sem virtue)</div>` : ''}`;
+                }
 
-</script>
+                // Damage stages (ex: Executioner's Throw) - % aplicado sobre formulaBase antes do LevelDmg
+                if (spell.damageStages) {
+                    html += `<div class="stage-info" style="margin-top:10px;">💠 Execução (monstro < 25% HP):</div>`;
+                    spell.damageStages.forEach((pct, i) => {
+                        const danoStage = Math.floor(formula(basePowerComBonus) * (1 + pct / 100));
+                        html += `<div>Estágio ${i + 1} (+${pct}%): <strong>${danoStage}</strong></div>`;
+                    });
+                }
+
+                // Repeat stages (ex: Spiritual Outburst)
+                if (spell.repeatStages) {
+                    const danoPrimario = danoBonus;
+                    html += `<div class="stage-info" style="margin-top:10px;">🔁 Dano secundário (por estágio):</div>`;
+                    spell.repeatStages.forEach((pct, i) => {
+                        const danoRepeat = Math.floor(danoPrimario * pct / 100);
+                        html += `<div>Estágio ${i + 1} (${pct}%): <strong>${danoRepeat}</strong></div>`;
+                    });
+
+                    // Repeat com Virtue
+                    if (spell.virtue) {
+                        const danoPrimarioVirtue = Math.floor(formulaVirtue(basePowerComBonus, spell.virtue));
+                        html += `<div class="stage-info" style="margin-top:10px;">⚡🔁 Dano secundário com VoH:</div>`;
+                        spell.repeatStages.forEach((pct, i) => {
+                            const danoRepeatV = Math.floor(danoPrimarioVirtue * pct / 100);
+                            html += `<div style="color:#a78bfa;">Estágio ${i + 1} (${pct}%): <strong>${danoRepeatV}</strong></div>`;
+                        });
+                    }
+                }
+            }
+
+            html += `</div></div>`;
+            results.innerHTML = html;
+        }
+
+    </script>
 </body>
+
 </html>
