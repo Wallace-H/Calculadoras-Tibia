@@ -1,0 +1,648 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simulador de Tier - Tibia</title>
+  <style>
+    :root {
+      --color-primary: #38bdf8;
+      --color-primary-hover: #0ea5e9;
+      --color-bg: #0f172a;
+      --color-surface: #1e293b;
+      --color-text: #f1f5f9;
+      --color-text-secondary: #cbd5e1;
+      --color-success: #22c55e;
+      --color-accent: #06b6d4;
+
+      --bg-main: var(--color-bg);
+      --bg-panel: var(--color-surface);
+      --bg-input: #0b1220;
+      --accent: var(--color-primary);
+      --accent-soft: rgba(56, 189, 248, 0.16);
+      --text: var(--color-text);
+      --text-muted: var(--color-text-secondary);
+      --border-soft: rgba(148, 163, 184, 0.35);
+      --danger: #e11d48;
+      --success: var(--color-success);
+      --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-main);
+      background: linear-gradient(135deg, var(--color-bg) 0, #0c0e1a 100%);
+      color: var(--text);
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 24px;
+    }
+
+
+    .app-container {
+      width: 100%;
+      max-width: 1080px;
+      background: var(--bg-panel);
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+      padding: 24px 24px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .app-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .emoji-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 30% 20%, #ffffff55 0, #f1c40f 40%, #b37f0a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 1px #b37f0a, 0 4px 10px rgba(0, 0, 0, 0.6);
+      font-size: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0.03em;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .app-header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .badge-small {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: #11151b;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(240px, 260px) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .panel {
+      background: var(--bg-panel);
+      border-radius: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      padding: 16px 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+
+    .panel-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .panel-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Equipment layout */
+    .equipment-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4px 0 6px;
+    }
+
+    .equipment-frame {
+      position: relative;
+      width: 180px;
+      height: 340px;
+      background: #333;
+      background-image: url('C:/Users/Wallace/Documents/scripts/tibia/Github Tibia/Calculadoras-Tibia/golden-set.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-radius: 6px;
+      box-shadow: inset 0 0 0 1px #000000aa, 0 6px 18px rgba(0, 0, 0, 0.8);
+    }
+
+    .tier-badge {
+      position: absolute;
+      min-width: 26px;
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: rgba(15, 15, 15, 0.9);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 1px #b37f0a88;
+      text-shadow: 0 1px 0 #000;
+    }
+
+    .tier-badge span {
+      opacity: 0.9;
+    }
+
+    /* Positions tuned para essa imagem específica */
+    .tier-helmet { top: 6px; right: 6px; }
+    .tier-armor { top: 92px; right: 6px; }
+    .tier-legs { top: 188px; right: 6px; }
+    .tier-boots { top: 284px; right: 6px; }
+    .tier-weapon { top: 112px; left: 6px; }
+
+    .legend-list {
+      margin: 0;
+      padding-left: 16px;
+      font-size: 19px;
+      color: var(--text-muted);
+    }
+
+    .legend-list li span {
+      color: var(--accent);
+    }
+
+    /* Right side */
+    .attributes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+    }
+
+    .attribute-card {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 10px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 12px 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
+    }
+
+
+    .attribute-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .attribute-name {
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .attribute-slot {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .tier-selector {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .tier-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      min-width: 60px;
+    }
+
+    select {
+      background: var(--bg-input);
+      color: var(--text);
+      border-radius: 6px;
+      border: 1px solid #454d5a;
+      padding: 4px 6px;
+      font-size: 11px;
+      outline: none;
+      flex: 1;
+    }
+
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+    }
+
+    .attribute-info {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .attribute-highlight {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* Summary panel */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+    }
+
+    .summary-card {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 10px;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      padding: 10px 12px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+    }
+
+
+    .summary-title {
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .summary-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .summary-note {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      .app-container {
+        padding: 14px 12px 16px;
+      }
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+      .equipment-wrapper {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="app-header-left">
+        <div class="title-row">
+          <div class="emoji-badge">⚗️</div>
+          <h1>Simulador de Tier</h1>
+        </div>
+        <p class="subtitle">Escolha o Tier de cada peça e veja o impacto dos atributos de forja no seu set.</p>
+      </div>
+      <div class="app-header-right">
+        <div class="badge-small">Tibia • Equipment Upgrade</div>
+      </div>
+    </header>
+
+    <main class="main-grid">
+      <!-- Left: equipment layout -->
+      <section class="panel">
+        <div class="equipment-wrapper">
+          <div class="equipment-frame">
+            <div id="badge-helmet" class="tier-badge tier-helmet"><span>T0</span></div>
+            <div id="badge-armor" class="tier-badge tier-armor"><span>T0</span></div>
+            <div id="badge-legs" class="tier-badge tier-legs"><span>T0</span></div>
+            <div id="badge-boots" class="tier-badge tier-boots"><span>T0</span></div>
+            <div id="badge-weapon" class="tier-badge tier-weapon"><span>T0</span></div>
+          </div>
+        </div>
+        <ul class="legend-list">
+          <li><span>Capacete</span>: Momentum</li>
+          <li><span>Armadura</span>: Ruse</li>
+          <li><span>Arma</span>: Onslaught</li>
+          <li><span>Calça</span>: Transcendence</li>
+          <li><span>Bota</span>: Amplification</li>
+        </ul>
+      </section>
+
+      <!-- Right: controls and stats -->
+      <section class="panel">
+        <div class="panel-title">Configuração de Tiers</div>
+        <p class="panel-subtitle">Selecione o Tier de cada peça para ver as chances, impactos e ativações médias por hora.</p>
+
+        <div class="attributes-grid">
+          <!-- Helmet / Momentum -->
+          <div class="attribute-card">
+            <div class="attribute-header">
+              <div>
+                <div class="attribute-name">Momentum</div>
+                <div class="attribute-slot">-2s do cooldown das spells</div>
+              </div>
+            </div>
+            <div class="tier-selector">
+              <select id="tier-helmet"></select>
+            </div>
+            <div class="attribute-info">
+              Chance de acionar: <span id="momentum-chance" class="attribute-highlight">0.00%</span><br />
+              Ativações médias por hora: <span id="momentum-hour" class="attribute-highlight">0.00</span>
+            </div>
+          </div>
+
+          <!-- Armor / Ruse -->
+          <div class="attribute-card">
+            <div class="attribute-header">
+              <div>
+                <div class="attribute-name">Ruse</div>
+                <div class="attribute-slot">Chance de esquivar ataques</div>
+              </div>
+            </div>
+            <div class="tier-selector">
+              <select id="tier-armor"></select>
+            </div>
+            <div class="attribute-info">
+              Chance de esquiva por hit recebido: <span id="ruse-chance" class="attribute-highlight">0.00%</span>
+            </div>
+          </div>
+
+          <!-- Weapon / Onslaught -->
+          <div class="attribute-card">
+            <div class="attribute-header">
+              <div>
+                <div class="attribute-name">Onslaught</div>
+                <div class="attribute-slot">Fatal (+60% dmg)</div>
+              </div>
+            </div>
+            <div class="tier-selector">
+              <select id="tier-weapon"></select>
+            </div>
+            <div class="attribute-info">
+              Chance de Fatal por hit: <span id="onslaught-chance" class="attribute-highlight">0.00%</span><br />
+              Aumento médio de dano: <span id="onslaught-avg" class="attribute-highlight">0.00%</span>
+            </div>
+          </div>
+
+          <!-- Legs / Transcendence -->
+          <div class="attribute-card">
+            <div class="attribute-header">
+              <div>
+                <div class="attribute-name">Transcendence</div>
+                <div class="attribute-slot">7 segundos de Avatar</div>
+              </div>
+            </div>
+            <div class="tier-selector">
+              <select id="tier-legs"></select>
+            </div>
+            <div class="attribute-info">
+              Chance de acionar a cada turno: <span id="transc-chance" class="attribute-highlight">0.00%</span><br />
+              Ativações médias por hora: <span id="transc-hour" class="attribute-highlight">0.00</span>
+            </div>
+          </div>
+
+          <!-- Boots / Amplification -->
+          <div class="attribute-card">
+            <div class="attribute-header">
+              <div>
+                <div class="attribute-name">Amplification</div>
+                <div class="attribute-slot">Amplifica os outros efeitos</div>
+              </div>
+            </div>
+            <div class="tier-selector">
+              <select id="tier-boots"></select>
+            </div>
+            <div class="attribute-info">
+              Impacto de Amplification: <span id="amplification-impact" class="attribute-highlight">0.00%</span><br />
+              
+            </div>
+          </div>
+        </div>
+
+              </section>
+    </main>
+  </div>
+
+  <script>
+    // Tabelas por Tier (valores retirados das imagens fornecidas)
+    const momentumData = {
+      1: { chance: 2.00, perHour: 36 },
+      2: { chance: 4.05, perHour: 72 },
+      3: { chance: 6.20, perHour: 111 },
+      4: { chance: 8.45, perHour: 152 },
+      5: { chance: 10.80, perHour: 194 },
+      6: { chance: 13.25, perHour: 238 },
+      7: { chance: 15.80, perHour: 284 },
+      8: { chance: 18.45, perHour: 332 },
+      9: { chance: 21.20, perHour: 381 },
+      10: { chance: 24.05, perHour: 432 },
+    };
+
+    const ruseData = {
+      1: 0.50,
+      2: 1.03,
+      3: 1.62,
+      4: 2.28,
+      5: 3.00,
+      6: 3.78,
+      7: 4.62,
+      8: 5.52,
+      9: 6.48,
+      10: 7.51,
+    };
+
+    const onslaughtData = {
+      1: { chance: 0.50, avg: 0.30 },
+      2: { chance: 1.05, avg: 0.63 },
+      3: { chance: 1.70, avg: 1.02 },
+      4: { chance: 2.45, avg: 1.47 },
+      5: { chance: 3.30, avg: 1.98 },
+      6: { chance: 4.25, avg: 2.55 },
+      7: { chance: 5.30, avg: 3.18 },
+      8: { chance: 6.45, avg: 3.87 },
+      9: { chance: 7.70, avg: 4.62 },
+      10: { chance: 9.05, avg: 5.43 },
+    };
+
+    const transcendenceData = {
+      1: { chance: 0.13, perHour: 2.34 },
+      2: { chance: 0.27, perHour: 4.86 },
+      3: { chance: 0.44, perHour: 7.92 },
+      4: { chance: 0.64, perHour: 11.52 },
+      5: { chance: 0.86, perHour: 15.48 },
+      6: { chance: 1.11, perHour: 19.98 },
+      7: { chance: 1.38, perHour: 24.84 },
+      8: { chance: 1.68, perHour: 30.24 },
+      9: { chance: 2.00, perHour: 36.00 },
+      10: { chance: 2.35, perHour: 42.30 },
+    };
+
+    const amplificationData = {
+      1: 2.50,
+      2: 5.40,
+      3: 9.10,
+      4: 13.60,
+      5: 18.90,
+      6: 25.00,
+      7: 31.90,
+      8: 39.60,
+      9: 48.10,
+      10: 57.40,
+    };
+
+    // Helpers
+    function fillTierSelect(selectId) {
+      const select = document.getElementById(selectId);
+      for (let i = 0; i <= 10; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = 'Tier ' + i;
+        select.appendChild(opt);
+      }
+      select.value = '0';
+    }
+
+    function formatPct(value) {
+      return value.toFixed(2) + '%';
+    }
+
+    function formatNumber(value) {
+      return value.toFixed(2);
+    }
+
+    function getAmplificationMultiplier(bootTier) {
+      if (bootTier === 0) return 1;
+      const amp = amplificationData[bootTier] || 0;
+      return 1 + amp / 100;
+    }
+
+    function updateAll() {
+      const tierHelmet = parseInt(document.getElementById('tier-helmet').value, 10);
+      const tierArmor = parseInt(document.getElementById('tier-armor').value, 10);
+      const tierWeapon = parseInt(document.getElementById('tier-weapon').value, 10);
+      const tierLegs = parseInt(document.getElementById('tier-legs').value, 10);
+      const tierBoots = parseInt(document.getElementById('tier-boots').value, 10);
+
+      const ampMult = getAmplificationMultiplier(tierBoots);
+      const ampImpact = amplificationData[tierBoots] || 0;
+
+      // Atualiza badges visuais T0-T10
+      document.getElementById('badge-helmet').firstElementChild.textContent = 'T' + tierHelmet;
+      document.getElementById('badge-armor').firstElementChild.textContent = 'T' + tierArmor;
+      document.getElementById('badge-legs').firstElementChild.textContent = 'T' + tierLegs;
+      document.getElementById('badge-boots').firstElementChild.textContent = 'T' + tierBoots;
+      document.getElementById('badge-weapon').firstElementChild.textContent = 'T' + tierWeapon;
+
+      // Momentum
+      let momentumChance = 0;
+      let momentumHour = 0;
+      if (tierHelmet > 0 && momentumData[tierHelmet]) {
+        momentumChance = momentumData[tierHelmet].chance * ampMult;
+        momentumHour = momentumData[tierHelmet].perHour * ampMult;
+      }
+      document.getElementById('momentum-chance').textContent = formatPct(momentumChance);
+      document.getElementById('momentum-hour').textContent = formatNumber(momentumHour);
+
+      // Ruse
+      let ruseChance = 0;
+      if (tierArmor > 0 && ruseData[tierArmor]) {
+        ruseChance = ruseData[tierArmor] * ampMult;
+      }
+      document.getElementById('ruse-chance').textContent = formatPct(ruseChance);
+
+      // Onslaught
+      let onChance = 0;
+      let onAvg = 0;
+      if (tierWeapon > 0 && onslaughtData[tierWeapon]) {
+        onChance = onslaughtData[tierWeapon].chance * ampMult;
+        onAvg = onslaughtData[tierWeapon].avg * ampMult;
+      }
+      document.getElementById('onslaught-chance').textContent = formatPct(onChance);
+      document.getElementById('onslaught-avg').textContent = formatPct(onAvg);
+
+      // Transcendence
+      let trChance = 0;
+      let trHour = 0;
+      if (tierLegs > 0 && transcendenceData[tierLegs]) {
+        trChance = transcendenceData[tierLegs].chance * ampMult;
+        trHour = transcendenceData[tierLegs].perHour * ampMult;
+      }
+      document.getElementById('transc-chance').textContent = formatPct(trChance);
+      document.getElementById('transc-hour').textContent = formatNumber(trHour);
+
+      // Amplification display
+      document.getElementById('amplification-impact').textContent = formatPct(ampImpact);
+    }
+
+    function init() {
+      fillTierSelect('tier-helmet');
+      fillTierSelect('tier-armor');
+      fillTierSelect('tier-weapon');
+      fillTierSelect('tier-legs');
+      fillTierSelect('tier-boots');
+
+      ['tier-helmet','tier-armor','tier-weapon','tier-legs','tier-boots'].forEach(id => {
+        document.getElementById(id).addEventListener('change', updateAll);
+      });
+
+      updateAll();
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
