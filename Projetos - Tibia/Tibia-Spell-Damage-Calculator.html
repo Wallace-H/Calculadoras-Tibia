@@ -170,6 +170,35 @@
             color: var(--color-accent);
         }
 
+        .conversion-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 8px;
+            padding: 10px 12px;
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            border-radius: 8px;
+        }
+
+        .conversion-physical {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #f97316;
+        }
+
+        .conversion-elemental {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+
+        .conversion-label {
+            font-size: 0.78rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 2px;
+        }
+
         /* Tooltip styles */
         .label-with-help {
             display: flex;
@@ -355,6 +384,16 @@
                     <input type="number" id="boost" value="0" min="0" step="0.5" oninput="calculateDamage()">
                 </div>
 
+                <div class="form-group" id="conversionGroup" style="display:none;">
+                    <label for="conversion">Conversão de Dano Elemental (%):
+                        <span class="help-icon">?
+                            <div class="help-tooltip">
+                                <p>Informe a % de conversão de dano elemental do seu personagem. O dano da spell será dividido: a % informada como <strong style="color:#38bdf8;">elemental</strong> e o restante como <strong style="color:#f97316;">físico</strong>.</p>
+                            </div>
+                        </span></label>
+                    <input type="number" id="conversion" value="0" min="0" max="100" step="1" oninput="calculateDamage()">
+                </div>
+
             </div>
 
             <div class="card">
@@ -422,6 +461,7 @@
             document.getElementById('magicGroup').style.display = isMelee ? 'none' : '';
             document.getElementById('skillGroup').style.display = isMelee ? '' : 'none';
             document.getElementById('weaponAtkGroup').style.display = isMelee ? '' : 'none';
+            document.getElementById('conversionGroup').style.display = vocation === 'knight' ? '' : 'none';
 
             spellsByVocation[vocation].forEach((spell, index) => {
                 const opt = document.createElement('option');
@@ -457,6 +497,7 @@
             const weaponAtk = parseFloat(document.getElementById('weaponAtk').value) || 0;
             const levelDmg = parseFloat(document.getElementById('levelDmg').value) || 0;
             const boost = parseFloat(document.getElementById('boost').value) || 0;
+            const conversion = parseFloat(document.getElementById('conversion').value) || 0;
 
             if (!vocation || spellIndex === "") {
                 return;
@@ -525,6 +566,18 @@ ${spell.imageUrl.trim() ? `<img src="${spell.imageUrl}">` : '📜'}
                 html += `<div class="result-damage">${danoBonus} de dano</div>
 ${boost > 0 ? `<div class="damage-breakdown">Aumentou ${Math.floor(diferenca)} com ${boost}% de bônus</div>` : ''}`;
 
+                // Conversão de dano (apenas knight)
+                if (vocation === 'knight' && conversion > 0) {
+                    const danoElemental = Math.floor(danoBonus * conversion / 100);
+                    const danoFisico = danoBonus - danoElemental;
+                    html += `
+        <div class="conversion-breakdown">
+            <div class="conversion-label">⚔️ Dano convertido (${conversion}% elemental)</div>
+            <div class="conversion-physical">🟠 Físico: ${danoFisico}</div>
+            <div class="conversion-elemental">🔵 Elemental: ${danoElemental}</div>
+        </div>`;
+                }
+
                 // Virtue bonus
                 if (spell.virtue) {
                     const comVirtue = Math.floor(formulaVirtue(basePowerComBonus, spell.virtue));
@@ -541,6 +594,18 @@ ${boost > 0 ? `<div class="damage-breakdown">Aumentou ${Math.floor(diferenca)} c
                     spell.damageStages.forEach((pct, i) => {
                         const danoStage = Math.floor(formula(basePowerComBonus) * (1 + pct / 100));
                         html += `<div>Estágio ${i + 1} (+${pct}%): <strong>${danoStage}</strong></div>`;
+
+                        // Conversão para damageStages
+                        if (vocation === 'knight' && conversion > 0) {
+                            const danoStageElem = Math.floor(danoStage * conversion / 100);
+                            const danoStageFis = danoStage - danoStageElem;
+                            html += `
+            <div class="conversion-breakdown">
+                <div class="conversion-label">⚔️ Dano convertido (${conversion}% elemental)</div>
+                <div class="conversion-physical">🟠 Físico: ${danoStageFis}</div>
+                <div class="conversion-elemental">🔵 Elemental: ${danoStageElem}</div>
+            </div>`;
+                        }
                     });
                 }
 
