@@ -414,7 +414,8 @@
                 { name: 'Energy Wave', basePower: 150, imageUrl: 'https://www.tibiawiki.com.br/images/7/7d/Energy_Wave.gif' },
                 { name: 'Great Energy Beam', basePower: 170, imageUrl: 'https://www.tibiawiki.com.br/images/6/67/Great_Energy_Beam.gif' },
                 { name: 'Rage of the Skies', basePower: 200, imageUrl: 'https://www.tibiawiki.com.br/images/9/9e/Rage_of_the_Skies.gif' },
-                { name: "Hell's Core", basePower: 250, imageUrl: 'https://www.tibiawiki.com.br/images/0/0e/Hell%27s_Core.gif' }
+                { name: "Hell's Core", basePower: 250, imageUrl: 'https://www.tibiawiki.com.br/images/0/0e/Hell%27s_Core.gif' },
+                { name: "Death Echo", basePower: 85, imageUrl: 'https://www.tibiawiki.com.br/images/7/74/Death_Echo.gif', echoRepeat: 0.5 }
             ],
             paladin: [
                 { name: 'Divine Caldera', basePower: 140, imageUrl: 'https://www.tibiawiki.com.br/images/f/fa/Divine_Caldera.gif' },
@@ -563,8 +564,19 @@ ${spell.imageUrl.trim() ? `<img src="${spell.imageUrl}">` : '📜'}
                 const danoNormal = Math.floor(formula(spell.basePower));
                 const diferenca = danoBonus - danoNormal;
 
-                html += `<div class="result-damage">${danoBonus} de dano</div>
+                // Echo repeat (ex: Death Echo)
+                if (spell.echoRepeat) {
+                    const danoEcho = Math.floor(danoBonus * spell.echoRepeat);
+                    const danoTotal = danoBonus + danoEcho;
+                    html += `<div class="result-damage">${danoBonus} de dano <span style="font-size:0.75rem;font-weight:400;color:var(--color-text-secondary);">(1ª vez)</span></div>
+${boost > 0 ? `<div class="damage-breakdown">Aumentou ${Math.floor(diferenca)} com ${boost}% de bônus</div>` : ''}
+<div class="stage-info" style="margin-top:8px;">🔁 Repetição (Death Echo — 50% do dano):</div>
+<div class="result-damage" style="color:#c084fc;">${danoEcho} de dano <span style="font-size:0.75rem;font-weight:400;color:var(--color-text-secondary);">(2ª vez)</span></div>
+<div class="stage-info">📊 Total das 2 aplicações: <strong>${danoTotal}</strong></div>`;
+                } else {
+                    html += `<div class="result-damage">${danoBonus} de dano</div>
 ${boost > 0 ? `<div class="damage-breakdown">Aumentou ${Math.floor(diferenca)} com ${boost}% de bônus</div>` : ''}`;
+                }
 
                 // Conversão de dano (apenas knight)
                 if (vocation === 'knight' && conversion > 0) {

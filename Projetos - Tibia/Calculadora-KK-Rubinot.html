@@ -259,9 +259,9 @@
 
             <div class="formula-info">
                 <strong>Como funciona:</strong><br>
-                1000 RCs = R$ 87,00<br>
+                1000 RCs = R$ 88,00<br>
                 1 KK = 1000 ÷ preço RC (em k)<br>
-                <code>Preço KK = 87 ÷ preço RC (em k)</code>
+                <code>Preço KK = 88 ÷ preço RC (em k)</code>
             </div>
         </div>
     </div>
@@ -274,9 +274,9 @@
         const totalRendaDisplay = document.getElementById('totalRenda');
         const warningDisplay = document.getElementById('warning');
 
-        // Valor fixo: 1000 RCs = 87 reais
-        const REAIS_POR_1000_RCS = 87;
-        const VALOR_RC_EM_REAIS = REAIS_POR_1000_RCS / 1000; // 0.087
+        // Valor fixo: 1000 RCs = 88 reais
+        const REAIS_POR_1000_RCS = 88;
+        const VALOR_RC_EM_REAIS = REAIS_POR_1000_RCS / 1000; // 0.088
 
         function parseValor(val) {
             // Troca vírgula por ponto para aceitar ambos como separador decimal
@@ -299,8 +299,8 @@
             warningDisplay.classList.remove('show');
 
             // Fórmulas
-            const precoRCEmK = precoRC / 1000; // 78000 → 78
-            const precoUmKK = 87 / precoRCEmK;
+            const precoRCEmK = precoRC / 1000;
+            const precoUmKK = 88 / precoRCEmK;
             const rcsParaUmKK = 1000 / precoRCEmK;
             const rendaTotal = precoUmKK * quantidadeKK;
 
