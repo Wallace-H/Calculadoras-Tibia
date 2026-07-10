@@ -199,6 +199,94 @@
             margin-bottom: 2px;
         }
 
+        /* Beam Mastery styles */
+        .beam-toggle-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .beam-toggle-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--color-primary);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .beam-toggle-row label {
+            margin: 0;
+            cursor: pointer;
+            color: var(--color-text-primary);
+            font-weight: 600;
+        }
+
+        .beam-level-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .beam-level-btn {
+            flex: 1;
+            padding: 8px 4px;
+            background: rgba(56, 189, 248, 0.08);
+            border: 2px solid rgba(56, 189, 248, 0.2);
+            border-radius: 8px;
+            color: var(--color-text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.18s;
+            text-align: center;
+        }
+
+        .beam-level-btn:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .beam-level-btn.active {
+            background: rgba(56, 189, 248, 0.18);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .beam-scenario {
+            margin-top: 10px;
+            padding: 10px 12px;
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            border-radius: 8px;
+        }
+
+        .beam-scenario-title {
+            font-size: 0.78rem;
+            color: var(--color-accent);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .beam-central {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--color-text-primary);
+        }
+
+        .beam-adjacent {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #a78bfa;
+            margin-top: 2px;
+        }
+
+        .beam-total {
+            font-size: 0.82rem;
+            color: var(--color-accent);
+            margin-top: 4px;
+        }
+
         /* Tooltip styles */
         .label-with-help {
             display: flex;
@@ -394,6 +482,22 @@
                     <input type="number" id="conversion" value="0" min="0" max="100" step="1" oninput="calculateDamage()">
                 </div>
 
+                <div class="form-group" id="beamMasteryGroup" style="display:none;">
+                    <label style="color:var(--color-primary);font-weight:600;margin-bottom:10px;">⚡ Beam Mastery</label>
+                    <div class="beam-toggle-row">
+                        <input type="checkbox" id="beamMasteryActive" onchange="calculateDamage()">
+                        <label for="beamMasteryActive">Beam Mastery ativa</label>
+                    </div>
+                    <div id="beamMasteryLevelRow" style="display:none;">
+                        <div style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:6px;">Nível da habilidade:</div>
+                        <div class="beam-level-row">
+                            <button class="beam-level-btn active" id="bmLvl1" onclick="selectBeamLevel(1)">Nível 1</button>
+                            <button class="beam-level-btn" id="bmLvl2" onclick="selectBeamLevel(2)">Nível 2</button>
+                            <button class="beam-level-btn" id="bmLvl3" onclick="selectBeamLevel(3)">Nível 3</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <div class="card">
@@ -412,21 +516,30 @@
             sorcerer: [
                 { name: 'Great Fire Wave', basePower: 100, imageUrl: 'https://www.tibiawiki.com.br/images/1/1d/Great_Fire_Wave.gif' },
                 { name: 'Energy Wave', basePower: 150, imageUrl: 'https://www.tibiawiki.com.br/images/7/7d/Energy_Wave.gif' },
-                { name: 'Great Energy Beam', basePower: 170, imageUrl: 'https://www.tibiawiki.com.br/images/6/67/Great_Energy_Beam.gif' },
+                { name: 'Great Energy/Death Beam', basePower: 155, imageUrl: 'https://www.tibiawiki.com.br/images/6/67/Great_Energy_Beam.gif', beamMastery: true },
                 { name: 'Rage of the Skies', basePower: 200, imageUrl: 'https://www.tibiawiki.com.br/images/9/9e/Rage_of_the_Skies.gif' },
                 { name: "Hell's Core", basePower: 250, imageUrl: 'https://www.tibiawiki.com.br/images/0/0e/Hell%27s_Core.gif' },
-                { name: "Death Echo", basePower: 85, imageUrl: 'https://www.tibiawiki.com.br/images/7/74/Death_Echo.gif', echoRepeat: 0.5 }
+                { name: "Death Echo", basePower: 75, imageUrl: 'https://www.tibiawiki.com.br/images/7/74/Death_Echo.gif', echoRepeat: 0.5 },
+                { name: "Ultimate Flame/Energy Strike", basePower: 210, imageUrl: 'https://www.tibiawiki.com.br/images/1/14/Ultimate_Flame_Strike.gif' },
+                { name: "Strong Flame/Energy Strike", basePower: 125, imageUrl: 'https://www.tibiawiki.com.br/images/6/66/Strong_Flame_Strike.gif' },
+                { name: "Lightning", basePower: 110, imageUrl: 'https://www.tibiawiki.com.br/images/5/58/Lightning.gif' }
             ],
             paladin: [
-                { name: 'Divine Caldera', basePower: 140, imageUrl: 'https://www.tibiawiki.com.br/images/f/fa/Divine_Caldera.gif' },
-                { name: 'Divine Grenade', basePower: 190, imageUrl: 'https://www.tibiawiki.com.br/images/b/be/Divine_Grenade.gif' }
+                { name: 'Divine Caldera', basePower: 150, imageUrl: 'https://www.tibiawiki.com.br/images/f/fa/Divine_Caldera.gif' },
+                { name: 'Divine Grenade', basePower: 190, imageUrl: 'https://www.tibiawiki.com.br/images/b/be/Divine_Grenade.gif' },
+                { name: 'Divine Barrage', basePower: 130, imageUrl: 'https://www.tibiawiki.com.br/images/e/ee/Divine_Barrage.gif' },
+                { name: 'Ethereal Barrage', basePower: 40, imageUrl: 'https://www.tibiawiki.com.br/images/8/8e/Ethereal_Barrage.gif', usesSkillFormula: true },
             ],
             druid: [
                 { name: 'Terra Wave', basePower: 120, imageUrl: 'https://www.tibiawiki.com.br/images/e/eb/Terra_Wave.gif' },
-                { name: 'Strong Ice Wave', basePower: 150, imageUrl: 'https://www.tibiawiki.com.br/images/a/ae/Strong_Ice_Wave.gif' },
+                { name: 'Strong Ice Wave', basePower: 140, imageUrl: 'https://www.tibiawiki.com.br/images/a/ae/Strong_Ice_Wave.gif' },
                 { name: 'Wrath of Nature', basePower: 150, imageUrl: 'https://www.tibiawiki.com.br/images/a/ab/Wrath_of_Nature.gif' },
                 { name: 'Eternal Winter', basePower: 200, imageUrl: 'https://www.tibiawiki.com.br/images/6/6e/Eternal_Winter.gif' },
-                { name: 'Twin Bursts', basePower: 115, imageUrl: 'https://www.tibiawiki.com.br/images/0/0d/Twin_Bursts.gif', stages: [20, 40, 60] }
+                { name: 'Twin Bursts', basePower: 115, imageUrl: 'https://www.tibiawiki.com.br/images/0/0d/Twin_Bursts.gif', stages: [20, 40, 60] },
+                { name: 'Strong Ice/Terra Strike', basePower: 115, imageUrl: 'https://www.tibiawiki.com.br/images/0/09/Strong_Terra_Strike.gif' },
+                { name: 'Ultimate Ice/Terra Strike', basePower: 195, imageUrl: 'https://www.tibiawiki.com.br/images/f/f0/Ultimate_Terra_Strike.gif' },
+                { name: 'Forked Thorns', basePower: 97, imageUrl: 'https://www.tibiawiki.com.br/images/3/38/Forked_Thorns.gif' },
+                { name: 'Forked Glacier', basePower: 90, imageUrl: 'https://www.tibiawiki.com.br/images/7/77/Forked_Glacier.gif' }
             ],
             monk: [
                 { name: 'Chained Penance', basePower: 70, imageUrl: 'https://www.tibiawiki.com.br/images/a/a2/Chained_Penance.gif' },
@@ -438,13 +551,14 @@
                 { name: 'Forceful Uppercut', basePower: 130, imageUrl: 'https://www.tibiawiki.com.br/images/3/3f/Forceful_Uppercut.gif' },
                 { name: 'Devastating Knockout', basePower: 62, imageUrl: 'https://www.tibiawiki.com.br/images/f/f5/Devastating_Knockout.gif', virtue: 208 },
                 { name: 'Double Jab', basePower: 40, imageUrl: 'https://www.tibiawiki.com.br/images/2/28/Double_Jab.gif' },
-                { name: 'Greater Tiger Clash', basePower: 44, imageUrl: 'https://www.tibiawiki.com.br/images/6/6b/Greater_Tiger_Clash.gif', virtue: 208 }
+                { name: 'Greater Tiger Clash', basePower: 44, imageUrl: 'https://www.tibiawiki.com.br/images/6/6b/Greater_Tiger_Clash.gif', virtue: 208 },
+                { name: 'Thousand Fist Blows', basePower: 62, imageUrl: 'https://www.tibiawiki.com.br/images/1/1a/Thousand_Fist_Blows.gif' }
             ],
             knight: [
                 { name: 'Fierce Berserk', basePower: 92, imageUrl: 'https://www.tibiawiki.com.br/images/1/1a/Fierce_Berserk.gif' },
                 { name: 'Berserk', basePower: 44, imageUrl: 'https://www.tibiawiki.com.br/images/f/f3/Berserk.gif' },
                 { name: 'Groundshaker', basePower: 32, imageUrl: 'https://www.tibiawiki.com.br/images/4/44/Groundshaker.gif' },
-                { name: 'Front Sweep', basePower: 72, imageUrl: 'https://www.tibiawiki.com.br/images/f/f8/Front_Sweep.gif' },
+                { name: 'Front Sweep', basePower: 80, imageUrl: 'https://www.tibiawiki.com.br/images/f/f8/Front_Sweep.gif' },
                 { name: 'Executioner\'s Throw', basePower: 60, imageUrl: 'https://www.tibiawiki.com.br/images/7/70/Executioner%27s_Throw.gif', damageStages: [100, 125, 150] },
                 { name: 'Annihilation', basePower: 125, imageUrl: 'https://www.tibiawiki.com.br/images/4/40/Annihilation.gif' },
                 { name: 'Brutal Strike', basePower: 39, imageUrl: 'https://www.tibiawiki.com.br/images/b/be/Brutal_Strike.gif' },
@@ -452,17 +566,38 @@
             ]
         };
 
+        let beamMasteryLevel = 1;
+
+        function selectBeamLevel(level) {
+            beamMasteryLevel = level;
+            [1, 2, 3].forEach(l => {
+                document.getElementById('bmLvl' + l).classList.toggle('active', l === level);
+            });
+            calculateDamage();
+        }
+
+        function updateInputFields(vocation, spell) {
+            const isMelee = vocation === 'knight' || vocation === 'monk';
+            const usesSkill = isMelee || (spell && spell.usesSkillFormula);
+            document.getElementById('magicGroup').style.display = usesSkill ? 'none' : '';
+            document.getElementById('skillGroup').style.display = usesSkill ? '' : 'none';
+            document.getElementById('weaponAtkGroup').style.display = usesSkill ? '' : 'none';
+            document.getElementById('conversionGroup').style.display = vocation === 'knight' ? '' : 'none';
+            const hasBeam = spell && spell.beamMastery;
+            document.getElementById('beamMasteryGroup').style.display = hasBeam ? '' : 'none';
+            if (!hasBeam) {
+                document.getElementById('beamMasteryActive').checked = false;
+                document.getElementById('beamMasteryLevelRow').style.display = 'none';
+            }
+        }
+
         function updateSpells() {
             const vocation = document.getElementById('vocation').value;
             const spellSelect = document.getElementById('spell');
             spellSelect.innerHTML = '<option value="">-- Selecione uma spell --</option>';
             if (!vocation) return;
 
-            const isMelee = vocation === 'knight' || vocation === 'monk';
-            document.getElementById('magicGroup').style.display = isMelee ? 'none' : '';
-            document.getElementById('skillGroup').style.display = isMelee ? '' : 'none';
-            document.getElementById('weaponAtkGroup').style.display = isMelee ? '' : 'none';
-            document.getElementById('conversionGroup').style.display = vocation === 'knight' ? '' : 'none';
+            updateInputFields(vocation, null);
 
             spellsByVocation[vocation].forEach((spell, index) => {
                 const opt = document.createElement('option');
@@ -484,8 +619,10 @@
                 icon.innerHTML = spell.imageUrl.trim()
                     ? `<img src="${spell.imageUrl}" alt="${spell.name}">`
                     : '📜';
+                updateInputFields(vocation, spell);
             } else {
                 preview.style.display = "none";
+                updateInputFields(vocation, null);
             }
         }
 
@@ -505,14 +642,20 @@
             }
 
             const spell = spellsByVocation[vocation][spellIndex];
+            const beamMasteryActive = document.getElementById('beamMasteryActive');
+            if (spell.beamMastery && beamMasteryActive) {
+                document.getElementById('beamMasteryLevelRow').style.display =
+                    beamMasteryActive.checked ? '' : 'none';
+            }
             const results = document.getElementById('results');
             const isMelee = vocation === 'knight' || vocation === 'monk';
+            const usesSkillFormula = isMelee || spell.usesSkillFormula;
 
             const basePowerComBonus = spell.basePower * (1 + boost / 100);
 
             // Retorna apenas o dano da spell (sem LevelDmg)
             function formulaBase(bp) {
-                if (isMelee) {
+                if (usesSkillFormula) {
                     return skill * weaponAtk * bp / 1000 + bp / 4;
                 }
                 return ml * bp / 25 + bp / 4;
@@ -588,6 +731,40 @@ ${boost > 0 ? `<div class="damage-breakdown">Aumentou ${Math.floor(diferenca)} c
             <div class="conversion-physical">🟠 Físico: ${danoFisico}</div>
             <div class="conversion-elemental">🔵 Elemental: ${danoElemental}</div>
         </div>`;
+                }
+
+                // Beam Mastery
+                if (spell.beamMastery && document.getElementById('beamMasteryActive').checked) {
+                    // Parâmetros por nível
+                    const bmParams = [
+                        { adjPct: 25, perMonster: 10, maxPct: 30 },  // nível 1
+                        { adjPct: 40, perMonster: 12, maxPct: 36 },  // nível 2
+                        { adjPct: 70, perMonster: 14, maxPct: 42 },  // nível 3
+                    ];
+                    const bm = bmParams[beamMasteryLevel - 1];
+
+                    // O boost começa no 1º monstro e vai até 3 (cap = maxPct)
+                    const scenarios = [
+                        { monsters: 1, label: '1 monstro' },
+                        { monsters: 2, label: '2 monstros' },
+                        { monsters: 3, label: '3 monstros (máx)' },
+                    ];
+
+                    html += `<div class="stage-info" style="margin-top:10px;margin-bottom:6px;">⚡ Beam Mastery — Nível ${beamMasteryLevel} (adjacentes: ${bm.adjPct}% | +${bm.perMonster}% por monstro, máx ${bm.maxPct}%)</div>`;
+
+                    scenarios.forEach(sc => {
+                        const centralBoost = Math.min(bm.perMonster * sc.monsters, bm.maxPct);
+                        const danoCentral = Math.floor(danoBonus * (1 + centralBoost / 100));
+                        const danoAdj = Math.floor(danoCentral * bm.adjPct / 100);
+                        const danoTotalBeam = danoCentral + danoAdj * 2;
+
+                        html += `
+        <div class="beam-scenario">
+            <div class="beam-scenario-title">🎯 ${sc.label} (+${centralBoost}% na central)</div>
+            <div class="beam-central">🔶 Beam central: ${danoCentral}</div>
+            <div class="beam-adjacent">🟣 Beams adjacentes: ${danoAdj} cada</div>
+        </div>`;
+                    });
                 }
 
                 // Virtue bonus
